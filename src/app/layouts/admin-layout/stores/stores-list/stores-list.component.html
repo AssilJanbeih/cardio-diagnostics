@@ -1,0 +1,61 @@
+<div class="header pb-8 pt-6">
+  <div class="row">
+    <div class="col-10">
+      <h2 class="ml-5">Stores Management</h2>
+    </div>
+    <div class="col-7">
+      <button
+     
+        mat-raised-button
+        (click)="openAddStore()"
+        color=""
+        class="ml-6 text-white"
+        [ngStyle]="{
+          'background-color': '#914099'
+        }"
+      >
+        + New Store
+      </button>
+      <button  *ngIf="authUser.role != 'cs'" mat-raised-button (click)="exportCSV()" color="" class=" ml-1 prpl text-white">
+        Export Stores
+      </button>
+      <button  *ngIf="authUser.role != 'cs'" class=" ml-1 prpl text-white" mat-raised-button
+      (click)="deleteAllStores()"
+    >
+      Delete Stores
+    </button>
+    </div>
+
+  </div>
+</div>
+<div  class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow" *ngIf="authUser.role != 'cs'">
+        <div class="dropzone" appDropZone (dropped)="startUpload($event)"
+        [class.hovering]="isHovering">
+        <p>Upload Stores</p>
+        <div class="file">
+         <label class="file-label">
+          <input type="file" (change)="startUpload($event.target.files)" style="display: none;" accept=".csv">
+          <span class="file-cta">
+          <span class="file-icon">
+          </span>
+          <span class="file-label">Choose CSV</span>
+          </span>
+         </label>
+        </div>
+        </div>
+      </div>
+      <div class="store-list">
+        <app-table
+          [canEdit]="canEdit"
+          [dataSource]="stores"
+          [columns]="columns"
+          (onEdit)="editStore($event)"
+        ></app-table>
+      </div>
+    </div>
+  </div>
+</div>

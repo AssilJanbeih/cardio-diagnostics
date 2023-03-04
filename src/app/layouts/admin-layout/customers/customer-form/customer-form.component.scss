@@ -1,0 +1,8 @@
+.complaint-form {
+  max-height: calc(100vh - 200px);
+}
+:host ::ng-deep {
+  label {
+    margin: 0.5rem !important;
+  }
+}

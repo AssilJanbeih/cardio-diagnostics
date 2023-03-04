@@ -1,0 +1,11 @@
+{
+  "/api": {
+    "target": "https://login.salesforce.com/services/oauth2/token",
+    "secure": false,
+    "pathRewrite": {
+      "^/api": ""
+    },
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

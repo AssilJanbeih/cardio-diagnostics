@@ -1,0 +1,113 @@
+<h2>{{ data && data.adminId ? "Edit Admin" : "Add Admin" }}</h2>
+
+<form [formGroup]="registerForm" (ngSubmit)="register()">
+  <div class="form-group">
+    <div class="input-group input-group-alternative mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
+      </div>
+      <input
+        class="form-control"
+        formControlName="name"
+        placeholder="Name"
+        type="text"
+      />
+    </div>
+    <small
+      class="p-error error-text"
+      *ngIf="
+        registerForm.controls.name.invalid && registerForm.controls.name.touched
+      "
+      >Admin Name is required.</small
+    >
+  </div>
+  <div class="form-group">
+    <div class="input-group input-group-alternative mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+      </div>
+      <input
+        class="form-control"
+        formControlName="email"
+        placeholder="Email"
+        type="email"
+      />
+    </div>
+    <small
+      class="p-error error-text"
+      *ngIf="
+        registerForm.controls.email.invalid &&
+        registerForm.controls.email.touched
+      "
+      >Admin Email is required.</small
+    >
+  </div>
+  <div class="form-group" *ngIf="!data">
+    <div class="input-group input-group-alternative mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="ni ni-key-25"></i></span>
+      </div>
+      <input
+        class="form-control"
+        formControlName="password"
+        placeholder="Password"
+        type="password"
+      />
+    </div>
+    <small
+      class="p-error error-text"
+      *ngIf="
+        registerForm.controls.password.invalid &&
+        registerForm.controls.password.touched
+      "
+      >Password is required and should min 6 chars.</small
+    >
+  </div>
+  <div class="form-group">
+    <div class="input-group input-group-alternative mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="ni ni-world"></i></span>
+      </div>
+      <input
+        class="form-control"
+        formControlName="role"
+        placeholder="Admin"
+        type="text"
+        readonly
+      />
+    </div>
+    <small
+      class="p-error error-text"
+      *ngIf="
+        registerForm.controls.role.invalid && registerForm.controls.role.touched
+      "
+      >Admin Role is required.</small
+    >
+  </div>
+  <div class="form-group mb-3">
+    <mat-radio-group
+      aria-labelledby="example-radio-group-label"
+      class="example-radio-group"
+      [formControl]="is_enabled"
+    >
+      <mat-radio-button class="example-radio-button" [value]="true">
+        Activate
+      </mat-radio-button>
+      <mat-radio-button class="example-radio-button" [value]="false">
+        Deactivate
+      </mat-radio-button>
+    </mat-radio-group>
+    
+    <small
+      class="p-error error-text"
+      *ngIf="
+        registerForm.controls.is_enabled.invalid &&
+        registerForm.controls.is_enabled.touched
+      "
+      >Active state is required.</small
+    >
+  </div>
+  <button mat-raised-button type="submit" color="primary">
+    {{ data ? "Edit" : "Add" }} Admin
+  </button>
+</form>

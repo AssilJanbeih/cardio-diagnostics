@@ -1,0 +1,168 @@
+<div
+  class="header pb-8 pt-6 "
+>
+<!--   [ngStyle]="{
+    'background-color':
+      type == 'Regular'
+        ? '#76be43'
+        : type == 'Privilege'
+        ? '#f05023'
+        : '#d22030 '
+  }" -->
+  <!-- <div class="container-fluid">
+    <div class="header-body"></div>
+  </div> -->
+  <div class="row">
+    <div class ="col-9">
+      <h2 class="ml-5">User List</h2></div>
+      <div class="col-7">
+        <div class="container-fluid">
+          <button
+          *ngIf="user.role != 'marketing'"
+          class="mr-3 text-white prpl"
+          mat-raised-button
+          color=""
+          (click)="openAddCustomer()"
+        >
+        {{ add_new_customer }}
+        </button>
+          <button *ngIf="user.role != 'cs'" mat-raised-button (click)="exportCSV2()" color="" class=" ml-1 prpl text-white">
+            Export Users
+          </button>
+          <button
+          *ngIf="user.isSuperAdmin == true"
+          mat-raised-button
+          (click)="deleteAllCustoemrs()"
+          color=""
+          class=" ml-6 text-white"
+          [ngStyle]="{
+            'background-color': '#914099'
+          }"
+        >
+          Delete all Users
+        </button>
+        </div>
+      </div>
+</div>
+</div>
+<div class="container-fluid mt--7">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header border-0">
+          <!-- <h2>Users</h2>
+
+          <button
+            *ngIf="user.role != 'marketing'"
+            class="mr-3 text-white"
+            [ngStyle]="{
+              'background-color':
+                type == 'Regular'
+                  ? '#76be43'
+                  : type == 'Privilege'
+                  ? '#f05023'
+                  : '#d22030 '
+            }"
+            mat-raised-button
+            color=""
+            (click)="openAddCustomer()"
+          >
+            {{ add_new_customer }}
+          </button>
+          <button
+            mat-raised-button
+            (click)="exportCSV()"
+            color="primary"
+            class="text-white"
+            [ngStyle]="{
+              'background-color':
+                type == 'Regular'
+                  ? '#76be43'
+                  : type == 'Privilege'
+                  ? '#f05023'
+                  : '#d22030 '
+            }"
+          >
+            Export Users
+          </button> -->
+          <div class="mt-4">
+            <!-- <h2 class="text-black mb-3">Search</h2> -->
+
+            <!-- Card Filtered stats -->
+            <div class="row">
+              <!--date search-->
+              <div class="form-inline mr-3">
+                <!--Start date picker-->
+                <label for="minDate" class="text-black mb-3 ml-3"
+                  >Start date:
+                </label>
+                <div class="input-group input-group-alternative mb-3 ml-3">
+                  <input
+                    class="form-control"
+                    placeholder="dd/mm/yyyy"
+                    [(ngModel)]="startDate"
+                    type="datetime-local"
+                  />
+                </div>
+
+                <!--End Date Picker-->
+
+                <label for="maxDate" class="text-black mb-3 ml-3"
+                  >End date:
+                </label>
+                <div class="input-group input-group-alternative mb-3 ml-3">
+                  <input
+                    class="form-control"
+                    [min]="startDate"
+                    [(ngModel)]="endDate"
+                    type="datetime-local"
+                  />
+                </div>
+
+                <!-- <input
+                  matInput
+                  [matDatepicker]="picker"
+                  placeholder="Choose a date"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker> -->
+                <button
+                  type="button"
+                  (click)="search()"
+                  class="btn btn-bg mb-3 ml-3"
+                >
+                  Filter
+                </button>
+                <button
+                  type="button"
+                  (click)="reset()"
+                  class="btn btn-bg mb-3 ml-3"
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="invoice-list mt-4">
+          <app-table
+            [canEdit]="canEdit"
+            [canDelete]="canDelete"
+            [haveStatistic]="haveStatistic"
+            [dataSource]="customers"
+            [columns]="columns"
+            (onRowClicked)="viewProfile($event)"
+            (onEdit)="editCustomer($event)"
+            (onDelete)="deleteCustomer($event)"
+                      ></app-table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

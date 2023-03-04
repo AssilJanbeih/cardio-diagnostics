@@ -1,0 +1,245 @@
+<h2>{{ data ? "Edit User" : "Add User" }}</h2>
+<form
+  class="complaint-form"
+  [formGroup]="customerForm"
+  (ngSubmit)="submitCustomerData()"
+>
+<!--First Name Last Name-->
+<div class="row">
+  <!--First Name-->
+  <div class="col-6">
+    <div class="form-group mb-3">
+      <h4>First Name:</h4>
+      <div class="input-group input-group-alternative">
+        <input
+          class="form-control"
+          placeholder="First name"
+          formControlName="firstName"
+          type="text"
+        />
+      </div>
+      <small
+        class="p-error error-text"
+        *ngIf="
+          customerForm.controls.firstName.invalid &&
+          customerForm.controls.firstName.touched
+        "
+        >First name is required.</small
+      >
+    </div>
+  </div>
+  <!--Lasst Name -->
+  <div class="col-6">
+    <div class="form-group mb-3">
+      <h4>Last Name:</h4>
+      <div class="input-group input-group-alternative">
+        <input
+          class="form-control"
+          placeholder="Last name"
+          formControlName="lastName"
+          type="text"
+        />
+      </div>
+      <small
+        class="p-error error-text"
+        *ngIf="
+          customerForm.controls.lastName.invalid &&
+          customerForm.controls.lastName.touched
+        "
+        >last name is required.</small
+      >
+    </div>
+  </div>
+</div>
+  
+<!--Passport & Nationality-->
+<div class="row">
+  <!--Passport-->
+  <div class="col-6">
+    <div class="form-group mb-3">
+      <h4>Qatar ID:</h4>
+      <div class="input-group input-group-alternative">
+        <input
+          class="form-control"
+          placeholder="Qatar ID"
+          formControlName="passportOrID"
+          type="text"
+        />
+      </div>
+    </div>
+  </div>
+  <!--Nationality-->
+  <div class="col-6">
+    <div class="form-group mb-3">
+      <h4>Nationality:</h4>
+      <div class="input-group input-group-alternative">
+        <mat-select
+          [formControl]="nationality"
+          placeholder="Nationality"
+          [ngStyle]="{ height: '40px' }"
+        >
+          <mat-option *ngFor="let elt of countries" [value]="elt.name">{{
+            elt.name
+          }}</mat-option>
+        </mat-select>
+      </div>
+      <small
+        class="p-error error-text"
+        *ngIf="
+          customerForm.controls.nationality.invalid &&
+          customerForm.controls.nationality.touched
+        "
+        >nationality is required.</small
+      >
+    </div>
+  </div>
+</div>
+
+<!--Email & Phone Number-->
+<div class="row">
+  <!--Email-->
+  <div class="col-6">
+    <div class="form-group mb-3">
+      <h4>Email:</h4>
+      <div class="input-group input-group-alternative">
+        <input
+          class="form-control"
+          placeholder="Email"
+          formControlName="email"
+          type="text"
+        />
+      </div>
+      <small
+        class="p-error error-text"
+        *ngIf="
+          customerForm.controls.email.invalid &&
+          customerForm.controls.email.touched
+        "
+        >Email is required.</small
+      >
+    </div>
+   
+  </div>
+  <!--Phone Number-->
+  <div class="col-6">
+    <div class="form-group mb-3">
+      <h4>Mobile:</h4>
+      <div class="input-group input-group-alternative">
+        <mat-form-field [ngStyle]="{ width: '20%' }">
+          <input
+            type="text"
+            matInput
+            placeholder="code"
+            [formControl]="countryCode"
+            required
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option
+              *ngFor="let elt of filteredOptions | async"
+              [value]="elt.value"
+            >
+              {{ elt.value }} 
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+  
+        <!-- <mat-select placeholder="Country code">
+          <mat-option *ngFor="let elt of countryCodesArray" [value]="elt.value"
+            >{{ elt.value }} {{ elt.country }}</mat-option
+          >
+        </mat-select> -->
+  
+        <input
+          [ngStyle]="{ width: '70%' }"
+          class="form-control"
+          placeholder="Number"
+          formControlName="phone"
+          type="text"
+        />
+      </div>
+      <small
+        class="p-error error-text"
+        *ngIf="
+          customerForm.controls.phone.invalid &&
+          customerForm.controls.phone.touched
+        "
+        >phone is required.</small
+      >
+    </div>
+  </div>
+</div>
+
+<!--Gender & Age-->
+<div class="row">
+  <!--Gender-->
+  <div class="col-6">
+    <div class="form-group mb-3">
+      <h4>Gender:</h4>
+      <div class="input-group input-group-alternative">
+        <mat-select
+          [formControl]="gender"
+          placeholder="Gender"
+          [ngStyle]="{ height: '40px' }"
+        >
+          <mat-option *ngFor="let elt of genderArray" [value]="elt">{{
+            elt
+          }}</mat-option>
+        </mat-select>
+      </div>
+      <small
+        class="p-error error-text"
+        *ngIf="
+          customerForm.controls.gender.invalid &&
+          customerForm.controls.gender.touched
+        "
+        >gender is required.</small
+      >
+    </div>
+  </div>
+  <!--Age-->
+  <div class="col-6">
+    <div class="form-group mb-3">
+      <h4>Age:</h4>
+      <div class="input-group input-group-alternative">
+        <input class="form-control" formControlName="age" placeholder="Age" type="number" />
+      </div>
+      <small
+        class="p-error error-text"
+        *ngIf="
+          customerForm.controls.age.invalid && customerForm.controls.age.touched
+        "
+        >Age is required.</small
+      >
+    </div>
+  </div>
+</div>
+
+<!--Active Inactive-->
+<div class="form-group mb-3">
+  <mat-radio-group
+    aria-labelledby="example-radio-group-label"
+    class="example-radio-group"
+    [formControl]="is_enabled"
+  >
+    <mat-radio-button class="example-radio-button" [value]="true">
+      Activate
+    </mat-radio-button>
+    <mat-radio-button class="example-radio-button" [value]="false">
+      Deactivate
+    </mat-radio-button>
+  </mat-radio-group>
+  <small
+    class="p-error error-text"
+    *ngIf="
+      customerForm.controls.is_enabled.invalid &&
+      customerForm.controls.is_enabled.touched
+    "
+    >Active state is required.</small
+  >
+</div>
+
+  <button mat-raised-button type="submit" color="primary">
+    {{ data ? "Edit User" : "Add User" }}
+  </button>
+</form>

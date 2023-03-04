@@ -1,0 +1,380 @@
+<div class="header pb-8 pt-3 pt-md-8">
+  <div class="container-fluid mb-5">
+    <div class="header-body">
+      <!--Add new User Button-->
+      <button
+      *ngIf="user.role != 'marketing'"
+      class="mr-3 text-white prpl mb-3"
+      mat-raised-button
+            color=""
+            (click)="openAddCustomer()"
+          >
+            + New User{{ add_new_customer }}
+          </button>
+
+      <h1 class="mb-3">Overall Campaign Statistics</h1>
+      <br />
+      <!-- Card stats -->
+      <div class="row mb-3">
+        <!--Total User Number-->
+        <div class="col-xl-3 col-lg-6">
+          <a routerLinkActive="active" [routerLink]="['/shopandwincustomers']">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">
+                      Total Users
+                    </h5>
+                    <span class="h2 font-weight-bold mb-0">{{
+                      customerTotal
+                    }}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div
+                      class="icon icon-shape orng text-white rounded-circle shadow"
+                    >
+                      <i class="fas fa-users"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <!--Total Invoices Number-->
+        <div class="col-xl-3 col-lg-6">
+          <a routerLinkActive="active" [routerLink]="['/invoices']">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">
+                      Total Invoices
+                    </h5>
+                    <span class="h2 font-weight-bold mb-0"> {{
+                      InvoicesTotal
+                    }}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div
+                      class="icon icon-shape orng text-white rounded-circle shadow"
+                    >
+                    <i class="fas fa-coins"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <!--Total Invoices Value-->
+        <div class="col-xl-3 col-lg-6">
+          <a routerLinkActive="active" [routerLink]="['/invoices']">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">
+                      Total Invoices Values
+                    </h5>
+                    <span class="h2 font-weight-bold mb-0">QAR {{
+                      totalSalesValue.toFixed(2)
+                    }}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div
+                      class="icon icon-shape orng text-white rounded-circle shadow"
+                    >
+                      <i class="fas fa-receipt"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <!--Total Label Number-->
+        <div class="col-xl-3 col-lg-6">
+          <a routerLinkActive="active" [routerLink]="['/invoices']">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">
+                      Total Coupons
+                    </h5>
+                    <span class="h2 font-weight-bold mb-0">{{
+                      totalCoupons
+                    }}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div
+                      class="icon icon-shape orng text-white rounded-circle shadow"
+                    >
+                    <i class="fas fa-ticket-alt"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <!--Total Label Value Number-->
+        <div class="col-xl-3 col-lg-6">
+          <a routerLinkActive="active" [routerLink]="['/invoices']">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">
+                      Total Coupon Value
+                    </h5>
+                    <span class="h2 font-weight-bold mb-0">QAR {{
+                      labelValue
+                    }}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div
+                      class="icon icon-shape orng text-white rounded-circle shadow"
+                    >
+                      <i class="fas fa-money-bill-alt"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <!--Total Overhead Value-->
+        <div class="col-xl-3 col-lg-6">
+          <a routerLinkActive="active" [routerLink]="['/invoices']">
+            <div class="card card-stats mb-4 mb-xl-0">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col">
+                    <h5 class="card-title text-uppercase text-muted mb-0">
+                      Total Overhead
+                    </h5>
+                    <span class="h2 font-weight-bold mb-0">QAR {{
+                      totalOverHead.toFixed(2)
+                    }}</span>
+                  </div>
+                  <div class="col-auto">
+                    <div
+                      class="icon icon-shape orng text-white rounded-circle shadow"
+                    >
+                    <i class="fas fa-wallet"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <!--Search-->
+    <h1 class="mb-3">Search</h1>
+
+    <!-- Card Filtered stats -->
+    <div class="row">
+      <!--date search-->
+      <div class="form-inline mr-3">
+        <!--Start date picker-->
+        <label for="minDate" class="mb-3 ml-3">Start date: </label>
+        <div class="input-group input-group-alternative mb-3 ml=3">
+          <input
+            class="form-control"
+            placeholder="Start Date"
+            [(ngModel)]="startDate"
+            type="datetime-local"
+          />
+        </div>
+
+        <!--End Date Picker-->
+
+        <label for="maxDate" class="mb-3 ml-3">End date: </label>
+        <div class="input-group input-group-alternative mb-3 ml-3">
+          <input
+            class="form-control"
+            placeholder="End Date"
+            [min]="startDate"
+            [(ngModel)]="endDate"
+            type="datetime-local"
+          />
+        </div>
+
+        <button type="button" (click)="search()" class="btn btn-bg mb-3 ml-3">
+          Filter
+        </button>
+        <button type="button" (click)="reset()" class="btn btn-bg mb-3 ml-3">
+          Reset
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <!--Total Customer Number Filtered-->
+      <div class="col-xl-3 col-lg-6">
+        <a routerLinkActive="active" [routerLink]="['/customers']">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">
+                    Total Users
+                  </h5>
+                  <span class="h2 font-weight-bold mb-0">{{
+                    customerFilteredTotal
+                  }}</span>
+                </div>
+                <div class="col-auto">
+                  <div
+                    class="icon icon-shape orng text-white rounded-circle shadow"
+                  >
+                    <i class="fas fa-users"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!--Total Invoices Number Filtered-->
+      <div class="col-xl-3 col-lg-6">
+        <a routerLinkActive="active" [routerLink]="['/invoices']">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">
+                    Total Invoices
+                  </h5>
+                  <span class="h2 font-weight-bold mb-0">{{
+                    invoicesFilteredTotal
+                  }}</span>
+                </div>
+                <div class="col-auto">
+                  <div
+                    class="icon icon-shape orng text-white rounded-circle shadow"
+                  >
+                    <i class="fas fa-receipt"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!--Total Invoices Value Filtered-->
+      <div class="col-xl-3 col-lg-6">
+        <a routerLinkActive="active" [routerLink]="['/invoices']">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">
+                    Total Invoices Value 
+                  </h5>
+                  <span class="h2 font-weight-bold mb-0">QAR {{
+                    invoicesValueFilterTotal.toFixed(2)
+                  }}</span>
+                </div>
+                <div class="col-auto">
+                  <div
+                    class="icon icon-shape orng text-white rounded-circle shadow"
+                  >
+                    <i class="fas fa-coins"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <!--Total Label Filtered Number-->
+      <div class="col-xl-3 col-lg-6">
+        <a routerLinkActive="active" [routerLink]="['/invoices']">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">
+                    Total Coupons
+                  </h5>
+                  <span class="h2 font-weight-bold mb-0">{{
+                    labelsFilteredTotal
+                  }}</span>
+                </div>
+                <div class="col-auto">
+                  <div
+                    class="icon icon-shape orng text-white rounded-circle shadow"
+                  >
+                  <i class="fas fa-ticket-alt"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!--Total Label Value Filtered Number-->
+      <div class="col-xl-3 col-lg-6">
+        <a routerLinkActive="active" [routerLink]="['/invoices']">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">
+                    Total Coupons Value
+                  </h5>
+                  <span class="h2 font-weight-bold mb-0">QAR {{
+                    labelsValueFilterTotal
+                  }}</span>
+                </div>
+                <div class="col-auto">
+                  <div
+                    class="icon icon-shape orng text-white rounded-circle shadow"
+                  >
+                    <i class="fas fa-money-bill-alt"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!--Total Overhead Filtered Value-->
+      <div class="col-xl-3 col-lg-6">
+        <a routerLinkActive="active" [routerLink]="['/invoices']">
+          <div class="card card-stats mb-4 mb-xl-0">
+            <div class="card-body">
+              <div class="row">
+                <div class="col">
+                  <h5 class="card-title text-uppercase text-muted mb-0">
+                    Total Overhead
+                  </h5>
+                  <span class="h2 font-weight-bold mb-0">QAR {{
+                    overheadValueFilterTotal.toFixed(2)
+                  }}</span>
+                </div>
+                <div class="col-auto">
+                  <div
+                    class="icon icon-shape orng text-white rounded-circle shadow"
+                  >
+                  <i class="fas fa-wallet"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

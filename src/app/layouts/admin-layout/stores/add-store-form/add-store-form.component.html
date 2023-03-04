@@ -1,0 +1,51 @@
+<h2>{{ data ? "Edit Store" : "Add Store" }}</h2>
+
+<form [formGroup]="storeForm" (ngSubmit)="submitStoreData()">
+  <div class="form-group">
+    <h4>Store Name:</h4>
+    <div class="input-group input-group-alternative mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text"></span>
+      </div>
+      <input
+        class="form-control"
+        formControlName="storeName"
+        placeholder="Name"
+        type="text"
+      />
+    </div>
+    <small
+      class="p-error error-text"
+      *ngIf="
+        storeForm.controls.storeNameinvalid &&
+        storeForm.controls.storeName.touched
+      "
+      >Store Name is required.</small
+    >
+  </div>
+  <div class="form-group mb-3">
+    <h4>Active:</h4>
+    <div class="input-group input-group-alternative">
+      <mat-select
+        [formControl]="storeStatus"
+        placeholder="Status"
+        [ngStyle]="{ height: '40px' }"
+      >
+        <mat-option *ngFor="let elt of statusArray" [value]="elt">{{
+          elt
+        }}</mat-option>
+      </mat-select>
+    </div>
+    <small
+      class="p-error error-text"
+      *ngIf="
+        storeForm.controls.storeStatus.invalid &&
+        storeForm.controls.storeStatus.touched
+      "
+      >Status is required.</small
+    >
+  </div>
+  <button mat-raised-button type="submit" color="primary">
+    {{ data ? "Edit" : "Add" }} Store
+  </button>
+</form>
