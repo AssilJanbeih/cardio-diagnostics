@@ -16,7 +16,6 @@ import { InvoiceService } from "src/app/services/invoice.service";
 
 import { Invoice } from "src/app/models/invoice";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { InvoiceFormComponent } from "../../invoices/invoice-form/invoice-form.component";
 
 @Component({
   selector: "app-customers-list",
@@ -27,34 +26,14 @@ export class CustomersListComponent implements OnInit {
   columns: DisplayedColumns<Customer>[] = [
     {
       columnDef: "CustomerId",
-      header: "Unique Id",
+      header: "Patient Id",
       cell: (element: Customer) => `${element.customerId}`,
     },
     {
       columnDef: "firstName",
-      header: "First Name",
-      cell: (element: Customer) => `${element.firstName}`,
-    },
-    {
-      columnDef: "lastName",
-      header: "Last Name",
-      cell: (element: Customer) => `${element.lastName}`,
-    },
-    {
-      columnDef: "nationality",
-      header: "Nationality",
-      cell: (element: Customer) => `${element.nationality}`,
-    },
-    {
-      columnDef: "idOrPassport",
-      header: "ID/Passport",
-      cell: (element: Customer) => `${element.passportOrID}`,
-    },
-
-    {
-      columnDef: "phone",
-      header: "Mobile",
-      cell: (element: Customer) => `${element.phone}`,
+      header: "Name",
+      cell: (element: Customer) =>
+        `${element.firstName} \n ${element.lastName}`,
     },
     {
       columnDef: "email",
@@ -62,8 +41,13 @@ export class CustomersListComponent implements OnInit {
       cell: (element: Customer) => `${element.email}`,
     },
     {
+      columnDef: "dob",
+      header: "Date of Birth",
+      cell: (element: Customer) => `${element.dob}`,
+    },
+    {
       columnDef: "dateCreated",
-      header: "Joined On",
+      header: "Create On",
       cell: (element: Customer) =>
         `${new firebase.Timestamp(
           element.dateCreated.seconds,
@@ -116,14 +100,14 @@ export class CustomersListComponent implements OnInit {
           // console.log(data);
           this.customerService.setCustomersData(data);
           this.customers = this.customerService.customers$.getValue();
-          this.add_new_customer = "New User";
+          this.add_new_customer = "New Patient";
         });
       } else {
         this.customerService.getCustomers(this.type).subscribe((data) => {
           // console.log(data);
           this.customerService.setCustomersData(data);
           this.customers = this.customerService.customers$.getValue();
-          this.add_new_customer = "New User";
+          this.add_new_customer = "New Patient";
         });
       }
     });
@@ -136,10 +120,10 @@ export class CustomersListComponent implements OnInit {
   }
 
   exportCSV(): void {
-    this.excelService.exportExcel(this.customerService.customers, "customers");
+    this.excelService.exportExcel(this.customerService.customers, "patients");
   }
   deleteAllCustoemrs() {
-    this.excelService.exportExcel(this.customerService.customers, "customers");
+    this.excelService.exportExcel(this.customerService.customers, "patients");
     let query = this.afs.collection("customers").ref.get();
     query.then((doc) => {
       doc.forEach((docList) => {
@@ -184,7 +168,7 @@ export class CustomersListComponent implements OnInit {
   }
 
   viewProfile(customer: Customer) {
-    this.router.navigate(["/shopandwincustomers/" + customer.id]);
+    this.router.navigate(["/PatientManagement/" + customer.id]);
   }
 
   search() {

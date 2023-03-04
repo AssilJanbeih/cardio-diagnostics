@@ -1,4 +1,4 @@
-<h2>{{ data ? "Edit User" : "Add User" }}</h2>
+<h2>{{ data ? "Edit Patient" : "Add Patient" }}</h2>
 <form
   class="complaint-form"
   [formGroup]="customerForm"
@@ -57,42 +57,19 @@
   <!--Passport-->
   <div class="col-6">
     <div class="form-group mb-3">
-      <h4>Qatar ID:</h4>
+      <h4>Date of Birth:</h4>
       <div class="input-group input-group-alternative">
         <input
           class="form-control"
-          placeholder="Qatar ID"
-          formControlName="passportOrID"
-          type="text"
+          placeholder="Date of Birth"
+          formControlName="dob"
+          type="date"
         />
       </div>
     </div>
   </div>
   <!--Nationality-->
-  <div class="col-6">
-    <div class="form-group mb-3">
-      <h4>Nationality:</h4>
-      <div class="input-group input-group-alternative">
-        <mat-select
-          [formControl]="nationality"
-          placeholder="Nationality"
-          [ngStyle]="{ height: '40px' }"
-        >
-          <mat-option *ngFor="let elt of countries" [value]="elt.name">{{
-            elt.name
-          }}</mat-option>
-        </mat-select>
-      </div>
-      <small
-        class="p-error error-text"
-        *ngIf="
-          customerForm.controls.nationality.invalid &&
-          customerForm.controls.nationality.touched
-        "
-        >nationality is required.</small
-      >
-    </div>
-  </div>
+
 </div>
 
 <!--Email & Phone Number-->
@@ -120,61 +97,14 @@
     </div>
    
   </div>
-  <!--Phone Number-->
-  <div class="col-6">
-    <div class="form-group mb-3">
-      <h4>Mobile:</h4>
-      <div class="input-group input-group-alternative">
-        <mat-form-field [ngStyle]="{ width: '20%' }">
-          <input
-            type="text"
-            matInput
-            placeholder="code"
-            [formControl]="countryCode"
-            required
-            [matAutocomplete]="auto"
-          />
-          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            <mat-option
-              *ngFor="let elt of filteredOptions | async"
-              [value]="elt.value"
-            >
-              {{ elt.value }} 
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-  
-        <!-- <mat-select placeholder="Country code">
-          <mat-option *ngFor="let elt of countryCodesArray" [value]="elt.value"
-            >{{ elt.value }} {{ elt.country }}</mat-option
-          >
-        </mat-select> -->
-  
-        <input
-          [ngStyle]="{ width: '70%' }"
-          class="form-control"
-          placeholder="Number"
-          formControlName="phone"
-          type="text"
-        />
-      </div>
-      <small
-        class="p-error error-text"
-        *ngIf="
-          customerForm.controls.phone.invalid &&
-          customerForm.controls.phone.touched
-        "
-        >phone is required.</small
-      >
-    </div>
-  </div>
+ 
 </div>
 
 <!--Gender & Age-->
 <div class="row">
   <!--Gender-->
   <div class="col-6">
-    <div class="form-group mb-3">
+    <!-- <div class="form-group mb-3">
       <h4>Gender:</h4>
       <div class="input-group input-group-alternative">
         <mat-select
@@ -195,10 +125,10 @@
         "
         >gender is required.</small
       >
-    </div>
+    </div> -->
   </div>
   <!--Age-->
-  <div class="col-6">
+  <!-- <div class="col-6">
     <div class="form-group mb-3">
       <h4>Age:</h4>
       <div class="input-group input-group-alternative">
@@ -212,7 +142,7 @@
         >Age is required.</small
       >
     </div>
-  </div>
+  </div> -->
 </div>
 
 <!--Active Inactive-->
@@ -240,6 +170,6 @@
 </div>
 
   <button mat-raised-button type="submit" color="primary">
-    {{ data ? "Edit User" : "Add User" }}
+    {{ data ? "Edit Patient" : "Add Patient" }}
   </button>
 </form>

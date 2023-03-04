@@ -28,17 +28,7 @@ export class CustomerFormComponent implements OnInit {
   customerForm: FormGroup;
   editMode: boolean;
   countries: Country[];
-  nationality = new FormControl(
-    this.data?.nationality ? this.data?.nationality : "",
-    [Validators.required]
-  );
-  gender = new FormControl(this.data?.gender ? this.data?.gender : "", [
-    Validators.required,
-  ]);
-  countryCode = new FormControl(
-    this.data?.countryCode ? this.data?.countryCode : "",
-    [Validators.required]
-  );
+
   is_enabled: FormControl = new FormControl(
     this.data?.is_enabled ? this.data?.is_enabled : true,
     [Validators.required]
@@ -70,27 +60,13 @@ export class CustomerFormComponent implements OnInit {
         : this.router.url.indexOf("privilege") > -1
         ? "Privilege"
         : "Default";
-    this.filteredOptions = this.countryCode.valueChanges.pipe(
-      startWith(""),
-      map((value: string) => this.filter(value || ""))
-    );
-    this.countryCodesObject = countryCodes.customList(
-      "countryNameEn",
-      "+{countryCallingCode}"
-    );
-    Object.keys(this.countryCodesObject).forEach((key) => {
-      this.countryCodesArray.push({
-        country: key,
-        value: this.countryCodesObject[key],
-      });
-    });
+
     // console.log(this.countryCodesArray);
 
     this.customerService.getCustomersAll().subscribe((data) => {
       this.customerService.setCustomersData(data);
     });
     this.url = this.router.url;
-    this.countries = this.countryService.countries;
 
     this.customerForm = this.fb.group({
       firstName: new FormControl(
@@ -101,22 +77,12 @@ export class CustomerFormComponent implements OnInit {
         this.data?.lastName ? this.data?.lastName : "",
         [Validators.required, Validators.minLength(3)]
       ),
-      countryCode: this.countryCode,
+
       email: new FormControl(this.data?.email ? this.data?.email : "", [
         Validators.required,
         Validators.email,
       ]),
-      gender: this.gender,
-      nationality: this.nationality,
-      age: new FormControl(this.data?.age ? this.data?.age : "", [
-        Validators.required,
-      ]),
-      phone: new FormControl(this.data?.phone ? this.data?.phone : "", [
-        Validators.required,
-      ]),
-      passportOrID: new FormControl(
-        this.data?.passportOrID ? this.data?.passportOrID : ""
-      ),
+      dob: new FormControl(this.data?.dob ? this.data?.dob : "", []),
       is_enabled: this.is_enabled,
     });
   }
@@ -144,9 +110,9 @@ export class CustomerFormComponent implements OnInit {
               (elt) => elt.id == this.data.id
             );
             customerList[customerIndex] = customer;
-            console.log(customerList[customerIndex], "users edited");
+            console.log(customerList[customerIndex], "patients edited");
             this.customerService.setCustomersData(customerList);
-            this._snackBar.open("User Details edited successfully", "X", {
+            this._snackBar.open("Patient Details edited successfully", "X", {
               horizontalPosition: "center",
               verticalPosition: "top",
             });
@@ -170,24 +136,18 @@ export class CustomerFormComponent implements OnInit {
           (elt) => elt.passportOrID == customer.passportOrID
         );
         if (customerExist.length > 0) {
-          this._snackBar.open("Customer email  already exist", "X", {
+          this._snackBar.open("Patient email  already exist", "X", {
             horizontalPosition: "center",
             verticalPosition: "top",
           });
         } else {
-          if (qidExist.length > 0) {
-            this._snackBar.open("Customer Passport or QID already exist", "X", {
-              horizontalPosition: "center",
-              verticalPosition: "top",
-            });
-          }
-          else {
           const totalCustomer = this.customerService.customers.length;
           const totalString = totalCustomer.toString();
           customer.dateCreated = new Date();
 
           customer.customerId =
-            "MOQ-CUST" + Math.floor(new Date().getTime() + Math.random());
+            "CARDIO-DIAGNOSTICS" +
+            Math.floor(new Date().getTime() + Math.random());
 
           this.customerService.addCustomer(customer).subscribe(
             (data) => {
@@ -199,7 +159,7 @@ export class CustomerFormComponent implements OnInit {
               customerList.unshift(customer);
               this.customerService.setCustomersData(customerList);
 
-              this._snackBar.open("User Data added successfully", "X", {
+              this._snackBar.open("Patient Data added successfully", "X", {
                 horizontalPosition: "center",
                 verticalPosition: "top",
               });
@@ -212,7 +172,7 @@ export class CustomerFormComponent implements OnInit {
             }
           );
         }
-      }}
+      }
     } else {
       console.log(this.data);
       this._snackBar.open("Some fields are invalid", "X", {

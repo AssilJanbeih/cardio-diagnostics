@@ -21,7 +21,7 @@ export class CampsService {
     this.camps$.next(data);
   }
   getCampsAll(): Observable<Camp[]> {
-    const collection = this.afs.collection<Camp>("campaigns");
+    const collection = this.afs.collection<Camp>("devices");
     const camps$ = collection.valueChanges({ idField: "id" }).pipe(
       map((camps) => {
         return camps;
@@ -30,7 +30,7 @@ export class CampsService {
     return camps$;
   }
   getCamps(): Observable<Camp[]> {
-    const collection = this.afs.collection<Camp>("camps");
+    const collection = this.afs.collection<Camp>("devices");
     const camp$ = collection.valueChanges({ idField: "id" }).pipe(
       map((stores) => {
         return stores;
@@ -41,13 +41,13 @@ export class CampsService {
   }
 
   addCamp(camp: Camp): Observable<DocumentReference<unknown>> {
-    return from(this.afs.collection("camps").add(camp));
+    return from(this.afs.collection("devices").add(camp));
   }
 
   editCamp(camp: Camp): Observable<void> {
-    return from(this.afs.collection("camps").doc(camp.id).update(camp));
+    return from(this.afs.collection("devices").doc(camp.id).update(camp));
   }
   deleteCamp(id: string): Observable<void> {
-    return from(this.afs.collection("camps").doc(id).delete());
+    return from(this.afs.collection("devices").doc(id).delete());
   }
 }

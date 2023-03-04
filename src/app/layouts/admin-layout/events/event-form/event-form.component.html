@@ -1,0 +1,78 @@
+<h2>{{ data && data.id ? "Edit Event Record" : "Add Event Record" }}</h2>
+<form
+  class="complaint-form"
+  [formGroup]="invoiceForm"
+  (ngSubmit)="submitInvoice()"
+  #f="ngForm"
+>
+<div class="form-group mb-3">
+  <h6>Customer Name:</h6>
+  <div class="input-group input-group-alternative">
+    <input
+      [readonly]="data && data.customerName"
+      class="form-control"
+      placeholder="Customer name"
+      formControlName="customerName"
+      type="text"
+    />
+  </div>
+ 
+</div>
+  <div class="form-group mb-3">
+    <h4>Device Name:</h4>
+    <div class="input-group input-group-alternative">
+      <mat-select [formControl]="campId" placeholder="Device Name" [ngStyle]="{ height: '40px' }">
+        <mat-option *ngFor="let elt of camp_array_of_camps" [value]="elt">{{
+          elt.name
+          }}</mat-option>
+      </mat-select>
+    </div>
+ 
+  </div>
+  <div class="row ">
+    <!--Invoice value-->
+    <!--Invoice serial-->
+    <div class="col-3">
+      <div class="form-group mb-3">
+        <h4>Heart Rate (BPM):</h4>
+        <div class="input-group input-group-alternative">
+          <input class="form-control" placeholder="Heart Rate (BPM)" formControlName="serialNumber" type="number" />
+        </div>
+      
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="form-group mb-3">
+        <h4>Type:</h4>
+        <div class="input-group input-group-alternative">
+          <input class="form-control" placeholder="Type" formControlName="amount" type="string" />
+        </div>
+      
+      </div>
+    </div>
+  </div>
+  <!--Label And Overhead invoice-->
+    <div class="row ">
+      <!--Invoice Label-->
+      <!-- <div class="col-6">
+        <div class="form-group mb-3">
+          <h4>Labels:</h4>
+          <div class="input-group input-group-alternative">
+            <input class="form-control" placeholder="Label" formControlName="label" type="number"/>
+          </div>
+        </div>
+      </div> -->
+      <!--Invoice Overhead-->
+      <!-- <div class="col-6">
+        <div class="form-group mb-3">
+          <h4>Overhead:</h4>
+          <div class="input-group input-group-alternative">
+            <input class="form-control" placeholder="Overhead" formControlName="overhead" type="number" />
+          </div>
+        </div>
+      </div> -->
+  </div>
+  <button mat-raised-button type="submit" color="primary">
+    {{ data && data.id ? "Edit Event Record" : "Add Event Record" }}
+  </button>
+</form>

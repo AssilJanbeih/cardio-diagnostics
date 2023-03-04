@@ -33,16 +33,14 @@ export class InvoiceService {
   }
 
   addInvoice(invoice: Invoice): Observable<DocumentReference<unknown>> {
-    return from(this.afs.collection("invoices").add(invoice));
+    return from(this.afs.collection("events").add(invoice));
   }
 
   editInvoice(invoice: Invoice): Observable<void> {
-    return from(
-      this.afs.collection("invoices").doc(invoice.id).update(invoice)
-    );
+    return from(this.afs.collection("events").doc(invoice.id).update(invoice));
   }
   getInvoices(): Observable<Invoice[]> {
-    const collection = this.afs.collection<Invoice>("invoices", (ref) =>
+    const collection = this.afs.collection<Invoice>("events", (ref) =>
       ref.orderBy("dateCreated", "desc")
     );
     const invoices$ = collection.valueChanges({ idField: "id" }).pipe(
@@ -54,7 +52,7 @@ export class InvoiceService {
   }
 
   getInvoicesByFromTo(dateFrom: Date, dateTo: Date): Observable<Invoice[]> {
-    const collection = this.afs.collection<Invoice>("invoices", (ref) =>
+    const collection = this.afs.collection<Invoice>("events", (ref) =>
       ref
         .where("dateCreated", ">=", dateFrom)
         .where("dateCreated", "<=", dateTo)
@@ -67,7 +65,7 @@ export class InvoiceService {
     return invoice$;
   }
   getInvoicesByCustomer(customerName): Observable<Invoice[]> {
-    const collection = this.afs.collection<Invoice>("invoices", (ref) =>
+    const collection = this.afs.collection<Invoice>("events", (ref) =>
       ref.where("customerId", "==", customerName).orderBy("dateCreated", "desc")
     );
     const customerInvoices$ = collection.valueChanges({ idField: "id" }).pipe(
@@ -79,7 +77,7 @@ export class InvoiceService {
   }
 
   getCustomerInvoices(): Observable<CustomerInvoices[]> {
-    const collection = this.afs.collection<CustomerInvoices>("invoices");
+    const collection = this.afs.collection<CustomerInvoices>("events");
     const customerInvoices$ = collection.valueChanges({ idField: "id" }).pipe(
       map((customerInvoices) => {
         return customerInvoices;
@@ -89,6 +87,6 @@ export class InvoiceService {
   }
 
   deleteInvoice(id: string): Observable<void> {
-    return from(this.afs.collection("invoices").doc(id).delete());
+    return from(this.afs.collection("events").doc(id).delete());
   }
 }

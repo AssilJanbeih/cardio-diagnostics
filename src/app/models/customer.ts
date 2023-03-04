@@ -15,6 +15,7 @@ export interface Customer {
   // memberType: string;
   // qatarAirwaysNumber?: string;
   age: string;
+  dob: any;
   email: string;
   gender: string;
   dateCreated?: any;

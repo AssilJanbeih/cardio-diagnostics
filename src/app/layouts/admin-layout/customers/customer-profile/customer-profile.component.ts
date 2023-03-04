@@ -8,13 +8,15 @@ import { Customer } from "src/app/models/customer";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 import { DisplayedColumns } from "src/app/shared/table/table.component";
-import { InvoiceFormComponent } from "../../invoices/invoice-form/invoice-form.component";
+
 import { MatDialog } from "@angular/material/dialog";
 import { CustomerFormComponent } from "../customer-form/customer-form.component";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { AuthService } from "src/app/services/auth.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AuthUser } from "src/app/models/authUser.model";
+import { ChartDataSets, ChartOptions, ChartType } from "chart.js";
+import { EventFormComponent } from "../../events/event-form/event-form.component";
 
 @Component({
   selector: "app-customer-profile",
@@ -44,25 +46,18 @@ export class CustomerProfileComponent implements OnInit {
     // },
     {
       columnDef: "store",
-      header: "Store",
-      cell: (element: Invoice) => `${element.storeName}`,
+      header: "Device Name",
+      cell: (element: Invoice) => `${element.campName}`,
+    },
+    {
+      columnDef: "serialNumber",
+      header: "Heart Rate (BPM)",
+      cell: (element: Invoice) => `${element.serialNumber}`,
     },
     {
       columnDef: "value",
-      header: "Value (QAR)",
-      cell: (element: Invoice) => `${element.amount}`, //////////Edited here : was amount
-    },
-    {
-      columnDef: "overhead",
-      header: "Overhead",
-      cell: (element: Invoice) => `${element.overhead ? element.overhead : ""}`,
-    },
-
-    {
-      columnDef: "coupons",
-      header: "Coupons By Invoice",
-      cell: (element: Invoice) =>
-        `${Math.floor(element.amount / element.campId["alfa"])}`, //////////Edited here : was amount
+      header: "Event Type",
+      cell: (element: Invoice) => `${element.amount}`,
     },
     {
       columnDef: "createdBy",
@@ -155,7 +150,7 @@ export class CustomerProfileComponent implements OnInit {
           : "",
       storeName: "",
       ////////////Edited here removed value: null,
-      overhead: null,
+
       label: null,
       serialNumber: null,
       salesValue: null,
@@ -172,13 +167,13 @@ export class CustomerProfileComponent implements OnInit {
         : "", //////////Edited here : added unique id
     };
 
-    this.dialog.open(InvoiceFormComponent, {
+    this.dialog.open(EventFormComponent, {
       width: "800px",
       data: invoice,
     });
   }
   openAddInvoice() {
-    this.dialog.open(InvoiceFormComponent, { width: "800px", data: null });
+    this.dialog.open(EventFormComponent, { width: "800px", data: null });
   }
   editCustomer() {
     this.dialog.open(CustomerFormComponent, {
@@ -187,7 +182,7 @@ export class CustomerProfileComponent implements OnInit {
     });
   }
   editInvoice(invoice: Invoice) {
-    this.dialog.open(InvoiceFormComponent, { width: "800px", data: invoice });
+    this.dialog.open(EventFormComponent, { width: "800px", data: invoice });
     // this.dialog.open(GiftCardComponent, { width: "800px", data: invoice });
   }
   deleteInvoice(invoice: Invoice) {
@@ -224,6 +219,6 @@ export class CustomerProfileComponent implements OnInit {
         TotalGiftCards: this.InvoicesTotal,
       };
     });
-    this.excelService.exportExcel(this.invoices, "Users");
+    this.excelService.exportExcel(this.invoices, "Patients");
   }
 }

@@ -36,21 +36,21 @@ export class SidebarComponent implements OnInit {
     const user = this.authService.user$.getValue();
     if (!user.isAdmin && !user.isSuperAdmin) {
       this.initialRoute.push(
+        // {
+        //   path: "/devices",
+        //   title: "Device Management",
+        //   icon: "fas fa-store",
+        //   class: "",
+        // },
         {
-          path: "/stores",
-          title: "Store Management",
-          icon: "fas fa-store",
-          class: "",
-        },
-        {
-          path: "/shopandwincustomers",
-          title: "Users Management",
+          path: "/patientManagement",
+          title: "Patient Management",
           icon: "fas fa-user",
           class: "",
         },
         {
-          path: "/invoices",
-          title: "Invoices Summary",
+          path: "/events",
+          title: "Events Summary",
           icon: "fas fa-receipt",
           class: "",
         }
@@ -75,78 +75,78 @@ export class SidebarComponent implements OnInit {
         //   icon: "fas fa-users icon-rd",
         //   class: "",
         // },
+        // {
+        //   path: "/cs",
+        //   title: "CS Management",
+        //   icon: "fas fa-users",
+        //   class: "",
+        // },
+        // {
+        //   path: "/admins",
+        //   title: "Admins Management",
+        //   icon: "fas fa-users",
+        //   class: "",
+        // },
+        // {
+        //   path: "/devices",
+        //   title: "Device Management",
+        //   icon: "fas fa-store",
+        //   class: "",
+        // },
         {
-          path: "/cs",
-          title: "CS Management",
-          icon: "fas fa-users",
+          path: "/devices",
+          title: "Devices",
+          icon: "ni-tv-2",
           class: "",
         },
         {
-          path: "/admins",
-          title: "Admins Management",
-          icon: "fas fa-users",
-          class: "",
-        },
-        {
-          path: "/stores",
-          title: "Store Management",
-          icon: "fas fa-store",
-          class: "",
-        },
-        {
-          path: "/campaigns",
-          title: "Campaigns",
-          icon: "fas fa-store",
-          class: "",
-        },
-        {
-          path: "/shopandwincustomers",
-          title: "Users Management",
+          path: "/PatientManagement",
+          title: "Patient Management",
           icon: "fas fa-user",
           class: "",
         },
         {
-          path: "/invoices",
-          title: "Invoices Summary",
+          path: "/events",
+          title: "Events Summary",
           icon: "fas fa-receipt",
           class: "",
         }
       );
     } else if (user.isSuperAdmin) {
       this.initialRoute.push(
+        // {
+        //   path: "/admins",
+        //   title: "Admins Management",
+        //   icon: "fas fa-users",
+        //   class: "",
+        // },
+        // {
+        //   path: "/devices",
+        //   title: "Device Management",
+        //   icon: "fas fa-store",
+        //   class: "",
+        // },
         {
-          path: "/admins",
-          title: "Admins Management",
-          icon: "fas fa-users",
+          path: "/devices",
+          title: "Devices",
+          icon: "ni-tv-2",
           class: "",
         },
+        // {
+        //   path: "/cs",
+        //   title: "CS Management",
+        //   icon: "fas fa-users",
+        //   class: "",
+        // },
         {
-          path: "/stores",
-          title: "Store Management",
-          icon: "fas fa-store",
-          class: "",
-        },
-        {
-          path: "/campaigns",
-          title: "Campaigns",
-          icon: "fas fa-store",
-          class: "",
-        },
-        {
-          path: "/cs",
-          title: "CS Management",
-          icon: "fas fa-users",
-          class: "",
-        },
-        {
-          path: "/shopandwincustomers",
-          title: "Users Management",
+          path: "/PatientManagement",
+          title: "Patients Records Management",
           icon: "fas fa-user",
           class: "",
         },
         {
-          path: "/invoices",
-          title: "Invoices Summary",
+          path: "/events",
+          title: "Events Summary",
           icon: "fas fa-receipt",
           class: "",
         }

@@ -14,7 +14,7 @@
   </div> -->
   <div class="row">
     <div class ="col-9">
-      <h2 class="ml-5">User List</h2></div>
+      <h2 class="ml-5">Patient List</h2></div>
       <div class="col-7">
         <div class="container-fluid">
           <button
@@ -27,7 +27,7 @@
         {{ add_new_customer }}
         </button>
           <button *ngIf="user.role != 'cs'" mat-raised-button (click)="exportCSV2()" color="" class=" ml-1 prpl text-white">
-            Export Users
+            Export Patients Records
           </button>
           <button
           *ngIf="user.isSuperAdmin == true"
@@ -39,7 +39,7 @@
             'background-color': '#914099'
           }"
         >
-          Delete all Users
+          Delete all Patients Records
         </button>
         </div>
       </div>
@@ -95,7 +95,7 @@
               <div class="form-inline mr-3">
                 <!--Start date picker-->
                 <label for="minDate" class="text-black mb-3 ml-3"
-                  >Start date:
+                  >Study Start date:
                 </label>
                 <div class="input-group input-group-alternative mb-3 ml-3">
                   <input
@@ -109,7 +109,7 @@
                 <!--End Date Picker-->
 
                 <label for="maxDate" class="text-black mb-3 ml-3"
-                  >End date:
+                  >Study End date:
                 </label>
                 <div class="input-group input-group-alternative mb-3 ml-3">
                   <input

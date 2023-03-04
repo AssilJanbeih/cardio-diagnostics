@@ -6,7 +6,6 @@ export interface Invoice {
   campName?: string;
   salesValue?: number;
   campValue?: number;
-  overhead?: number;
   label?: number;
   serialNumber?: number;
   dateCreated?: any;

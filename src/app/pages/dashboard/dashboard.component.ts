@@ -49,8 +49,8 @@ export class DashboardComponent implements OnInit {
   value_sum = 0;
   overhead_sum = 0;
   labelValue = 0;
-  totalSalesValue = 0.00;
-  campValue = 0 ;
+  totalSalesValue = 0.0;
+  campValue = 0;
   // totalLabels = 0;
   //Filter
   startDate: Date;
@@ -86,19 +86,18 @@ export class DashboardComponent implements OnInit {
     this.labelsValueFilterTotal = 0;
     this.overheadValueFilterTotal = 0;
     this.user = this.authService.user$.getValue();
-    let query_invoices = this.afs.collection("invoices");
+    let query_invoices = this.afs.collection("events");
     query_invoices.get().subscribe((docList_1) => {
       this.invoicesTotal = docList_1.size;
       docList_1.forEach((doc) => {
-
         let invoice_data = doc.data();
         this.campValue = invoice_data["campId"]["alfa"];
 
         this.InvoicesTotal = docList_1.size;
-        this.totalSalesValue += Math.round(invoice_data["amount"]*100)/100;
+        this.totalSalesValue += Math.round(invoice_data["amount"] * 100) / 100;
         this.totalCoupons += Math.floor(
           invoice_data["amount"] / this.campValue
-        );        
+        );
       });
       this.labelValue = this.totalCoupons * this.campValue;
       this.totalOverHead = this.totalSalesValue - this.labelValue;
@@ -113,7 +112,7 @@ export class DashboardComponent implements OnInit {
   search() {
     if (this.startDate && this.endDate) {
       this.customerFilteredTotal = 0;
-      this.invoicesValueFilterTotal = 0.00;
+      this.invoicesValueFilterTotal = 0.0;
       this.invoicesFilteredTotal = 0;
       this.labelsFilteredTotal = 0;
       this.labelsValueFilterTotal = 0;
@@ -121,7 +120,7 @@ export class DashboardComponent implements OnInit {
       console.log(this.startDate, this.endDate, "date");
       let start = new Date(this.startDate);
       let end = new Date(this.endDate);
-      let queryCards = this.afs.collection("invoices", (ref) =>
+      let queryCards = this.afs.collection("events", (ref) =>
         ref.where("dateCreated", ">=", start).where("dateCreated", "<=", end)
       );
       let queryCustomers = this.afs.collection("customers", (ref) =>
@@ -135,15 +134,16 @@ export class DashboardComponent implements OnInit {
         docList.forEach((doc) => {
           let data = doc.data();
           this.campValue = data["campId"]["alfa"];
-          this.invoicesValueFilterTotal += Math.round(data["amount"]*100)/100;
-          
+          this.invoicesValueFilterTotal +=
+            Math.round(data["amount"] * 100) / 100;
+
           this.labelsFilteredTotal += Math.floor(
-             data["amount"] / this.campValue
+            data["amount"] / this.campValue
           );
-  
         });
         this.labelsValueFilterTotal = this.labelsFilteredTotal * this.campValue;
-        this.overheadValueFilterTotal = this.invoicesValueFilterTotal - this.labelsValueFilterTotal;
+        this.overheadValueFilterTotal =
+          this.invoicesValueFilterTotal - this.labelsValueFilterTotal;
       });
     } else {
       this._snackBar.open("Please add start date and end to", "X", {
