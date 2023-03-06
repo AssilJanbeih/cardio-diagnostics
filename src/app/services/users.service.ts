@@ -8,7 +8,6 @@ import {
 } from "@angular/fire/compat/firestore";
 import { BehaviorSubject, from, map, Observable } from "rxjs";
 import { User } from "../models/users";
-import { Store } from "../models/store";
 import { Customer } from "../models/customer";
 import { httpFactory } from "@angular/http/src/http_module";
 
@@ -17,7 +16,6 @@ import { httpFactory } from "@angular/http/src/http_module";
 })
 export class UsersService {
   readonly users$ = new BehaviorSubject<User[]>([]);
-  readonly stores$ = new BehaviorSubject<Store[]>([]);
   readonly customers$ = new BehaviorSubject<Customer[]>([]);
   constructor(
     public auth: AngularFireAuth,
@@ -27,9 +25,6 @@ export class UsersService {
 
   get users(): User[] {
     return this.users$.getValue();
-  }
-  get stores(): Store[] {
-    return this.stores$.getValue();
   }
   get customers(): Customer[] {
     return this.customers$.getValue();
