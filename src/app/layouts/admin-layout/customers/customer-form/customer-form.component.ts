@@ -1,11 +1,8 @@
 import { SalesforceService } from "./../../../../services/salesforce.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CustomerService } from "../../../../services/customer.service";
-import countryCodes from "country-codes-list";
-import { Country } from "src/app/models/countries";
 
 import { Component, Inject, OnInit } from "@angular/core";
-import { CountriesService } from "src/app/services/countries.service";
 import { Customer } from "src/app/models/customer";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -27,7 +24,6 @@ import {
 export class CustomerFormComponent implements OnInit {
   customerForm: FormGroup;
   editMode: boolean;
-  countries: Country[];
 
   is_enabled: FormControl = new FormControl(
     this.data?.is_enabled ? this.data?.is_enabled : true,
@@ -36,15 +32,11 @@ export class CustomerFormComponent implements OnInit {
   genderArray = ["Female", "Male", "Not specified"];
   memberTypeArray = ["Regular", "Privilege"];
   url: string;
-  countryCodesObject: any;
   type: string;
-  countryCodesArray: { country: string; value: string }[] = [];
-  filteredOptions: Observable<{ country: string; value: string }[]>;
   constructor(
     private readonly httpClient: HttpClient,
     private readonly fb: FormBuilder,
     private readonly salesForceService: SalesforceService,
-    private readonly countryService: CountriesService,
     private readonly customerService: CustomerService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly router: Router,
@@ -61,7 +53,6 @@ export class CustomerFormComponent implements OnInit {
         ? "Privilege"
         : "Default";
 
-    // console.log(this.countryCodesArray);
 
     this.customerService.getCustomersAll().subscribe((data) => {
       this.customerService.setCustomersData(data);
@@ -85,13 +76,6 @@ export class CustomerFormComponent implements OnInit {
       dob: new FormControl(this.data?.dob ? this.data?.dob : "", []),
       is_enabled: this.is_enabled,
     });
-  }
-
-  filter(value: string): { country: string; value: string }[] {
-    const filterValue = value.toLowerCase();
-    return this.countryCodesArray.filter((option) =>
-      option.value.toLowerCase().includes(filterValue)
-    );
   }
 
   submitCustomerData(): void {
