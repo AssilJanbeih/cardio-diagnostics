@@ -35,12 +35,12 @@ export class CustomerService {
     const collection = this.afs
       .collection<Customer>("customers")
       .doc(customerId);
-    const customerInvoices$ = collection.valueChanges({ idField: "id" }).pipe(
-      map((customerInvoice) => {
-        return customerInvoice;
+    const customerEvents$ = collection.valueChanges({ idField: "id" }).pipe(
+      map((customerEvent) => {
+        return customerEvent;
       })
     );
-    return customerInvoices$;
+    return customerEvents$;
   }
 
   getCustomers(type: string): Observable<Customer[]> {
@@ -98,7 +98,7 @@ export class CustomerService {
     return customer$;
   }
 
-  getCustomerByQatarId(customerId: string): Observable<Customer[]> {
+  getCustomerByCustomerId(customerId: string): Observable<Customer[]> {
     const collection = this.afs.collection<Customer>("customers", (ref) =>
       ref.where("id", "==", customerId)
     );

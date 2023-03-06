@@ -86,7 +86,7 @@ export class AddUserFormComponent implements OnInit {
             );
             userList[userIndex] = user;
 
-            // console.log(invoiceList[invoiceIndex], "invoices edited");
+           
             this.userService.setUsersData(userList);
             this._snackBar.open("Admin edited successfully", "X", {
               horizontalPosition: "center",

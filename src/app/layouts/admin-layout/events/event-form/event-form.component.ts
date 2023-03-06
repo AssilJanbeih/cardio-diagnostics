@@ -1,7 +1,6 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UsersService } from "src/app/services/users.service";
-import { InvoiceService } from "../../../../services/invoice.service";
-import { Country } from "src/app/models/countries";
+import { EventService } from "../../../../services/event.service";
 import {
   FormBuilder,
   FormControl,
@@ -10,22 +9,20 @@ import {
 } from "@angular/forms";
 import { Component, Inject, OnInit } from "@angular/core";
 
-import { Invoice } from "src/app/models/invoice";
+import { Event } from "src/app/models/event";
 
 import * as firebase from "firebase/firestore";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
-import { Store } from "src/app/models/store";
 import { Customer } from "src/app/models/customer";
 
-import { StoresService } from "src/app/services/stores.service";
 import { CustomerService } from "src/app/services/customer.service";
 
 import { AuthService } from "src/app/services/auth.service";
 import { AuthUser } from "src/app/models/authUser.model";
 import { Router } from "@angular/router";
-import { CampsService } from "src/app/services/camp.service";
-import { Camp } from "src/app/models/camp";
+import { DevicesService } from "src/app/services/device.service";
+import { Device } from "src/app/models/device";
 
 @Component({
   selector: "app-event-form",
@@ -33,56 +30,49 @@ import { Camp } from "src/app/models/camp";
   styleUrls: ["./event-form.component.scss"],
 })
 export class EventFormComponent implements OnInit {
-  invoiceForm: FormGroup;
+  eventForm: FormGroup;
   url: string;
   editMode: boolean;
   user: AuthUser;
   customers: Customer[];
-  campaigns: Camp[];
-  storeData: Store[];
-  CampData: Camp[];
-  invoicesData: Invoice[];
+  devices: Device[];
+  DeviceData: Device[];
+  eventsData: Event[];
   localUserService: UsersService;
-  store_array_of_name = [];
-  camp_array_of_camps = [];
+  device_array_of_devices = [];
 
-  camp_alfa_value = 0;
-  invoices_array_of_id_by_customr: [];
+  device_alfa_value = 0;
+  events_array_of_id_by_customr: [];
   customer_array = [];
   customers_ids = [];
-  overhead: number;
-  salesValue: number;
   authUser: AuthUser;
-  storeName = new FormControl(this.data?.storeName ? this.data?.storeName : "");
-  campId = new FormControl(this.data?.campId ? this.data?.campId : "");
-  serialNumber = new FormControl(
-    this.data?.serialNumber ? this.data?.serialNumber : ""
+  deviceId = new FormControl(this.data?.deviceId ? this.data?.deviceId : "");
+  heartRate = new FormControl(
+    this.data?.heartRate ? this.data?.heartRate : ""
   );
-  amount = new FormControl(this.data?.amount ? this.data?.amount : "");
-  label = new FormControl(this.data?.label ? this.data?.label : "");
+  type = new FormControl(this.data?.type ? this.data?.type : "");
   customerId: string;
   customerUniqueId: string;
   constructor(
     private readonly fb: FormBuilder,
-    private readonly invoiceService: InvoiceService,
-    private readonly campService: CampsService,
-    private readonly storeService: StoresService,
+    private readonly eventService: EventService,
+    private readonly deviceService: DevicesService,
     private readonly customerService: CustomerService,
     private readonly authService: AuthService,
     private readonly _snackBar: MatSnackBar,
     private readonly router: Router,
     private readonly userService: UsersService,
     public dialogRef: MatDialogRef<EventFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Invoice
+    @Inject(MAT_DIALOG_DATA) public data: Event
   ) {}
 
   ngOnInit(): void {
-    this.campService.getCampsAll().subscribe((data2) => {
-      this.campaigns = data2;
-      this.campService.setCampsData(data2);
+    this.deviceService.getDevicesAll().subscribe((data2) => {
+      this.devices = data2;
+      this.deviceService.setDevicesData(data2);
     });
-    this.invoiceService.getInvoices().subscribe((data) => {
-      this.invoiceService.setInvoicesData(data);
+    this.eventService.getEvents().subscribe((data) => {
+      this.eventService.setEventsData(data);
     });
     this.customerService.getCustomersAll().subscribe((data) => {
       this.customers = data;
@@ -92,20 +82,6 @@ export class EventFormComponent implements OnInit {
     this.customerUniqueId = this.data?.customerUniqueId
       ? this.data.customerUniqueId
       : "";
-    this.invoiceForm = this.fb.group({
-      storeName: this.storeName,
-
-      campId: this.campId,
-      amount: this.amount,
-      serialNumber: new FormControl(
-        this.data?.serialNumber ? this.data?.serialNumber : ""
-      ),
-      customerName: new FormControl(
-        this.data?.customerName ? this.data?.customerName : ""
-      ),
-    });
-    this.overhead = 0;
-    this.store_array_of_name = [];
     this.customer_array = [];
     this.customers_ids = [];
     this.authUser = this.authService.userValue;
@@ -114,22 +90,13 @@ export class EventFormComponent implements OnInit {
       this.userService.setUsersData(data);
       this.authUser = this.authService.userValue;
     });
-    this.storeService.getStores().subscribe((data) => {
-      this.storeData = data;
-      this.storeService.setStoresData(data);
-      for (let i = 0; i < this.storeData.length; i++) {
-        if (this.storeData[i]["storeStatus"] == "Yes") {
-          this.store_array_of_name.push(this.storeData[i]["storeName"]);
-        }
-      }
-    });
-    this.campService.getCamps().subscribe((data) => {
-      this.CampData = data;
-      this.campService.setCampsData(data);
+    this.deviceService.getDevices().subscribe((data) => {
+      this.DeviceData = data;
+      this.deviceService.setDevicesData(data);
 
-      for (let i = 0; i < this.CampData.length; i++) {
-        if (this.CampData[i]["campStatus"] == "Yes") {
-          this.camp_array_of_camps.push(this.CampData[i]);
+      for (let i = 0; i < this.DeviceData.length; i++) {
+        if (this.DeviceData[i]["deviceStatus"] == "Yes") {
+          this.device_array_of_devices.push(this.DeviceData[i]);
         }
       }
     });
@@ -142,10 +109,10 @@ export class EventFormComponent implements OnInit {
         );
       }
     });
-    this.invoiceForm.get("customerName").valueChanges.subscribe((val) => {
+    this.eventForm.get("customerName").valueChanges.subscribe((val) => {
       if (val) {
-        this.invoiceForm.get("customerName").setValue("");
-        this.customerService.getCustomerByQatarId(val).subscribe((data) => {
+        this.eventForm.get("customerName").setValue("");
+        this.customerService.getCustomerByCustomerId(val).subscribe((data) => {
           console.log(data);
           if (data.length > 0) {
             this.customerId = data[0].customerId;
@@ -156,28 +123,28 @@ export class EventFormComponent implements OnInit {
     this.customerId = this.data?.customerId ? this.data.customerId : "";
   }
 
-  submitInvoice(): void {
-    if (this.invoiceForm.valid) {
+  submitEvent(): void {
+    if (this.eventForm.valid) {
       //on edit
       if (this.data && this.data.id) {
-        const invoice = this.invoiceForm.value as Invoice;
-        invoice.id = this.data.id;
-        invoice.campName = invoice.campId["name"];
-        invoice.campValue = invoice.campId["alfa"];
+        const event = this.eventForm.value as Event;
+        event.id = this.data.id;
+        event.deviceName = event.deviceId["name"];
+        event.deviceValue = event.deviceId["alfa"];
 
-        invoice.updatedBy = this.authUser.name
+        event.updatedBy = this.authUser.name
           ? this.authUser.name
           : "No Updates";
-        invoice.updatedAt = new Date() ? new Date() : "No Updates";
-        this.invoiceService.editInvoice(invoice).subscribe(
+        event.updatedAt = new Date() ? new Date() : "No Updates";
+        this.eventService.editEvent(event).subscribe(
           (data) => {
             this.dialogRef.close();
-            let invoiceList = this.invoiceService.invoices;
-            const invoiceIndex = invoiceList.findIndex(
+            let eventList = this.eventService.events;
+            const eventIndex = eventList.findIndex(
               (elt) => elt.id == this.data.id
             );
-            invoiceList[invoiceIndex] = invoice;
-            this.invoiceService.setInvoicesData(invoiceList);
+            eventList[eventIndex] = event;
+            this.eventService.setEventsData(eventList);
             this._snackBar.open("Event edited successfully", "X", {
               horizontalPosition: "center",
               verticalPosition: "top",
@@ -192,31 +159,29 @@ export class EventFormComponent implements OnInit {
         );
       } else {
         //on add
-        const invoice = this.invoiceForm.value as Invoice;
-        invoice.dateCreated = new Date();
-        invoice.customerId = this.customerId;
+        const event = this.eventForm.value as Event;
+        event.dateCreated = new Date();
+        event.customerId = this.customerId;
         ///////////////Edited Here
-        invoice.customerUniqueId = this.customerUniqueId;
-        invoice.createdBy = this.authUser.name ? this.authUser.name : "";
-        invoice.updatedBy = "No Updates";
-        invoice.updatedAt = "No Updates";
+        event.customerUniqueId = this.customerUniqueId;
+        event.createdBy = this.authUser.name ? this.authUser.name : "";
+        event.updatedBy = "No Updates";
+        event.updatedAt = "No Updates";
 
-        invoice.campName = invoice.campId["name"];
-        invoice.campValue = invoice.campId["alfa"]; // alfasale
+        event.deviceName = event.deviceId["name"];
+        event.deviceValue = event.deviceId["alfa"]; // alfasale
 
-        // console.log(invoice.overhead);
-
-        invoice.invoiceId =
+        event.eventId =
           "Cardio-" + Math.floor(new Date().getTime() + Math.random());
 
-        this.invoiceService.addInvoice(invoice).subscribe(
+        this.eventService.addEvent(event).subscribe(
           (data) => {
             this.dialogRef.close();
 
-            let invoiceList = this.invoiceService.invoices$.getValue();
-            invoiceList.unshift(invoice);
+            let eventList = this.eventService.events$.getValue();
+            eventList.unshift(event);
 
-            this.invoiceService.setInvoicesData(invoiceList);
+            this.eventService.setEventsData(eventList);
             this._snackBar.open("Event added successfully", "X", {
               horizontalPosition: "center",
               verticalPosition: "top",

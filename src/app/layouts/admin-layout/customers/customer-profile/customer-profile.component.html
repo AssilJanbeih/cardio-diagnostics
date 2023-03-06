@@ -20,8 +20,6 @@
                 <span class="label">Patient Id: </span>
                 <span class="value">{{ customer?.customerId }}</span>
               </div>
-              <!--Phone Number-->
-            
               <!--Email-->
               <div class="info">
                 <span class="label">Email: </span>
@@ -32,8 +30,6 @@
                 <span class="label">DOB: </span>
                 <span class="value">{{ customer?.dob }}</span>
               </div>
-              <!--Gender-->
-           
               <!--Gender-->
               <div class="info">
                 <span class="label">Active: </span>
@@ -54,12 +50,12 @@
             </button> 
           </div>
         </div>
-        <div class="invoice-list">
+        <div class="event-list">
           <app-table
             [canEdit]="canEdit"
-            [dataSource]="invoices"
+            [dataSource]="events"
             [columns]="columns"
-            (onEdit)="editInvoice($event)"
+            (onEdit)="editEvent($event)"
           ></app-table>
         </div>
       </div>

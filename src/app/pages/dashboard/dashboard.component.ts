@@ -54,7 +54,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     public afs: AngularFirestore,
-    public invoicesSerice: EventService,
+    public eventsService: EventService,
     private readonly _snackBar: MatSnackBar,
     private readonly activatedRoute: ActivatedRoute,
 
@@ -66,10 +66,9 @@ export class DashboardComponent implements OnInit {
     this.customerFilteredTotal = 0;
     this.eventsFilteredTotal = 0;
     this.user = this.authService.user$.getValue();
-    let query_invoices = this.afs.collection("events");
-    query_invoices.get().subscribe((docList_1) => {
+    let query_events = this.afs.collection("events");
+    query_events.get().subscribe((docList_1) => {
       docList_1.forEach((doc) => {
-        // let invoice_data = doc.data();
         this.EventsTotal = docList_1.size;
     
       });

@@ -1,9 +1,9 @@
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { InvoiceService } from "../../../../services/invoice.service";
+import { EventService } from "../../../../services/event.service";
 import { ExcelService } from "../../../../services/excel.service";
 import { DisplayedColumns } from "../../../../shared/table/table.component";
 import { Component, OnInit } from "@angular/core";
-import { Invoice } from "../../../../models/invoice";
+import { Event } from "../../../../models/event";
 import { MatDialog } from "@angular/material/dialog";
 
 import * as firebase from "firebase/firestore";
@@ -14,31 +14,31 @@ import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { EventFormComponent } from "../event-form/event-form.component";
 
 @Component({
-  selector: "app-invoices-list",
+  selector: "app-events-list",
   templateUrl: "./events-list.component.html",
   styleUrls: ["./events-list.component.scss"],
 })
 export class EventsListComponent implements OnInit {
-  columns: DisplayedColumns<Invoice>[] = [
+  columns: DisplayedColumns<Event>[] = [
     {
       columnDef: "value",
       header: "Type",
-      cell: (element: Invoice) => `${element.amount}`,
+      cell: (element: Event) => `${element.type}`,
     },
     {
-      columnDef: "serialNumber",
+      columnDef: "heartRate",
       header: "Heart Rate (BPM)",
-      cell: (element: Invoice) => `${element.serialNumber}`,
+      cell: (element: Event) => `${element.heartRate}`,
     },
     {
       columnDef: "createdBy",
       header: "Created By",
-      cell: (element: Invoice) => `${element.createdBy}`,
+      cell: (element: Event) => `${element.createdBy}`,
     },
     {
       columnDef: "dateCreated",
       header: "Date Created",
-      cell: (element: Invoice) =>
+      cell: (element: Event) =>
         `${new firebase.Timestamp(
           element.dateCreated.seconds,
           element.dateCreated.nanoseconds
@@ -49,19 +49,19 @@ export class EventsListComponent implements OnInit {
     {
       columnDef: "actions",
       header: "Actions",
-      cell: (element: Invoice) => ``,
+      cell: (element: Event) => ``,
     },
   ];
-  invoices: Invoice[] = [];
+  events: Event[] = [];
   canEdit: boolean = false;
   canDelete: boolean = false;
-  localInvoiceService: InvoiceService;
+  localEventService: EventService;
   user: AuthUser;
   startDate: Date;
   endDate: Date;
   constructor(
     private readonly excelService: ExcelService,
-    private readonly invoiceService: InvoiceService,
+    private readonly eventService: EventService,
     private readonly authService: AuthService,
     private readonly _snackBar: MatSnackBar,
     public dialog: MatDialog,
@@ -76,49 +76,46 @@ export class EventsListComponent implements OnInit {
     if (this.user.role) {
       this.canDelete = false;
     }
-    this.invoiceService.getInvoices().subscribe((data) => {
+    this.eventService.getEvents().subscribe((data) => {
       // debugger;
-      this.invoiceService.setInvoicesData(data);
-      this.invoices = this.invoiceService.invoices$.getValue();
+      this.eventService.setEventsData(data);
+      this.events = this.eventService.events$.getValue();
     });
-    this.localInvoiceService = this.invoiceService;
+    this.localEventService = this.eventService;
   }
 
   exportCSV2() {
     let array_of_ata: any[] = [];
-    for (let i = 0; i < this.invoices.length; i++) {
+    for (let i = 0; i < this.events.length; i++) {
       array_of_ata.push({
-        camp_id: this.invoices[i]["campId"]["campId"],
-        camp_name: this.invoices[i]["campName"],
-        camp_value: this.invoices[i]["campValue"],
-        customer_name: this.invoices[i]["customerName"],
-        customer_uniq_id: this.invoices[i]["customerUniqueId"],
+        device_id: this.events[i]["deviceId"]["deviceId"],
+        device_name: this.events[i]["deviceName"],
+        customer_name: this.events[i]["customerName"],
+        customer_uniq_id: this.events[i]["customerUniqueId"],
         date_created: new firebase.Timestamp(
-          this.invoices[i].dateCreated.seconds,
-          this.invoices[i].dateCreated.nanoseconds
+          this.events[i].dateCreated.seconds,
+          this.events[i].dateCreated.nanoseconds
         )
           .toDate()
           .toDateString(),
-        invoice_id: this.invoices[i]["invoiceId"],
-        amount: this.invoices[i]["amount"],
-        overhead: this.invoices[i]["overhead"],
-        created_by: this.invoices[i]["createdBy"],
-        serial_number: this.invoices[i]["serialNumber"],
-        store_name: this.invoices[i]["storeName"],
-        updated_by: this.invoices[i]["updatedBy"],
-        updated_at: this.invoices[i]["updatedAt"],
+        event_id: this.events[i]["eventId"],
+        type: this.events[i]["type"],
+        created_by: this.events[i]["createdBy"],
+        heart_rate: this.events[i]["heartRate"],
+        updated_by: this.events[i]["updatedBy"],
+        updated_at: this.events[i]["updatedAt"],
       });
     }
 
     this.excelService.exportExcel(array_of_ata, "events");
   }
 
-  openAddInvoice() {
+  openAddEvent() {
     this.dialog.open(EventFormComponent, { width: "800px", data: null });
   }
 
-  deleteAllInvoices() {
-    this.excelService.exportExcel(this.invoiceService.invoices, "events");
+  deleteAllEvents() {
+    this.excelService.exportExcel(this.eventService.events, "events");
     let query = this.afs.collection("events").ref.get();
     query.then((doc) => {
       doc.forEach((docList) => {
@@ -127,20 +124,19 @@ export class EventsListComponent implements OnInit {
     });
   }
 
-  editInvoice(invoice: Invoice) {
-    this.dialog.open(EventFormComponent, { width: "800px", data: invoice });
-    // this.dialog.open(GiftCardComponent, { width: "800px", data: invoice });
+  editEvent(event: Event) {
+    this.dialog.open(EventFormComponent, { width: "800px", data: event });
   }
 
-  deleteInvoice(invoice: Invoice) {
-    this.invoiceService.deleteInvoice(invoice.id).subscribe(
+  deleteEvent(event: Event) {
+    this.eventService.deleteEvent(event.id).subscribe(
       () => {
-        let invoiceList = this.invoiceService.invoices;
-        const invoiceIndex = invoiceList.findIndex(
-          (elt) => elt.id == invoice.id
+        let eventList = this.eventService.events;
+        const eventIndex = eventList.findIndex(
+          (elt) => elt.id == event.id
         );
-        invoiceList = invoiceList.splice(invoiceIndex, 1);
-        this.invoiceService.setInvoicesData(invoiceList);
+        eventList = eventList.splice(eventIndex, 1);
+        this.eventService.setEventsData(eventList);
       },
       (error) => {
         this._snackBar.open(error, "X", {
@@ -152,13 +148,13 @@ export class EventsListComponent implements OnInit {
   }
   search() {
     if (this.startDate && this.endDate) {
-      this.invoices = [];
+      this.events = [];
       console.log(this.startDate, this.endDate, "date");
       let start = new Date(this.startDate);
       let end = new Date(this.endDate);
-      this.invoiceService.getInvoicesByFromTo(start, end).subscribe((data) => {
-        this.invoiceService.setInvoicesData(data);
-        this.invoices = this.invoiceService.invoices$.getValue();
+      this.eventService.getEventsByFromTo(start, end).subscribe((data) => {
+        this.eventService.setEventsData(data);
+        this.events = this.eventService.events$.getValue();
       });
     } else {
       this._snackBar.open("Please add start date and end to", "X", {
@@ -170,10 +166,10 @@ export class EventsListComponent implements OnInit {
   reset() {
     this.startDate = null;
     this.endDate = null;
-    this.invoiceService.getInvoices().subscribe((data) => {
+    this.eventService.getEvents().subscribe((data) => {
       // debugger;
-      this.invoiceService.setInvoicesData(data);
-      this.invoices = this.invoiceService.invoices$.getValue();
+      this.eventService.setEventsData(data);
+      this.events = this.eventService.events$.getValue();
     });
   }
 }

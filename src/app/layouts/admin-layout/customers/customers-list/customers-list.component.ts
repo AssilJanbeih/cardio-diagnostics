@@ -12,9 +12,9 @@ import { CustomerService } from "src/app/services/customer.service";
 import { StatisticsFormComponent } from "../statistics-form/statistics-form.component";
 import { AuthUser } from "src/app/models/authUser.model";
 import { AuthService } from "src/app/services/auth.service";
-import { InvoiceService } from "src/app/services/invoice.service";
+import { EventService } from "src/app/services/event.service";
 
-import { Invoice } from "src/app/models/invoice";
+import { Event } from "src/app/models/event";
 import { AngularFirestore } from "@angular/fire/compat/firestore";
 
 @Component({

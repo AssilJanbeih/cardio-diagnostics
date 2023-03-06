@@ -1,7 +1,7 @@
 import { ExcelService } from "src/app/services/excel.service";
-import { Invoice } from "src/app/models/invoice";
+import { Event } from "src/app/models/event";
 import * as firebase from "firebase/firestore";
-import { InvoiceService } from "src/app/services/invoice.service";
+import { EventService } from "src/app/services/event.service";
 import { switchMap } from "rxjs";
 import { CustomerService } from "src/app/services/customer.service";
 import { Customer } from "src/app/models/customer";
@@ -24,51 +24,40 @@ import { EventFormComponent } from "../../events/event-form/event-form.component
   styleUrls: ["./customer-profile.component.scss"],
 })
 export class CustomerProfileComponent implements OnInit {
-  valueTotal: number = 0;
-  InvoicesTotal: number = 0;
-  labelValue: number = 0;
-  totalCoupons: number = 0;
-  totalSalesValue: number = 0;
-  totalOverHead: number = 0;
-  totalLabels: number = 0;
+  eventsTotal: number = 0;
   customer: Customer;
-  invoice: Invoice;
+  event: Event;
   canEdit = true;
   user: AuthUser;
   canDelete = true;
-  invoices: Invoice[];
-  invoices_data: any[] = [];
-  columns: DisplayedColumns<Invoice>[] = [
-    // {
-    //   columnDef: "id",
-    //   header: "Invoice ID",
-    //   cell: (element: Invoice) => `${element.invoiceId}`,
-    // },
+  events: Event[];
+  events_data: any[] = [];
+  columns: DisplayedColumns<Event>[] = [
     {
       columnDef: "store",
       header: "Device Name",
-      cell: (element: Invoice) => `${element.campName}`,
+      cell: (element: Event) => `${element.deviceName}`,
     },
     {
-      columnDef: "serialNumber",
+      columnDef: "heartRate",
       header: "Heart Rate (BPM)",
-      cell: (element: Invoice) => `${element.serialNumber}`,
+      cell: (element: Event) => `${element.heartRate}`,
     },
     {
-      columnDef: "value",
+      columnDef: "type",
       header: "Event Type",
-      cell: (element: Invoice) => `${element.amount}`,
+      cell: (element: Event) => `${element.type}`,
     },
     {
       columnDef: "createdBy",
       header: "Creatd By",
-      cell: (element: Invoice) =>
+      cell: (element: Event) =>
         `${element.createdBy ? element.createdBy : ""}`,
     },
     {
       columnDef: "dateCreated",
       header: "Date Created",
-      cell: (element: Invoice) =>
+      cell: (element: Event) =>
         `${new firebase.Timestamp(
           element.dateCreated.seconds,
           element.dateCreated.nanoseconds
@@ -79,7 +68,7 @@ export class CustomerProfileComponent implements OnInit {
     {
       columnDef: "actions",
       header: "Actions",
-      cell: (element: Invoice) => ``,
+      cell: (element: Event) => ``,
     },
   ];
 
@@ -90,7 +79,7 @@ export class CustomerProfileComponent implements OnInit {
     public dialog: MatDialog,
     private readonly authService: AuthService,
     private readonly _snackBar: MatSnackBar,
-    private readonly invoiceService: InvoiceService,
+    private readonly eventsService: EventService,
     public afs: AngularFirestore
   ) {}
 
@@ -104,75 +93,52 @@ export class CustomerProfileComponent implements OnInit {
           switchMap((data) => {
             this.customer = data as Customer;
 
-            let query_customers_invoices = this.afs.collection(
-              "invoices",
+            let query_customers_events = this.afs.collection(
+              "events",
               (ref) => ref.where("customerId", "==", this.customer.id)
             );
-            query_customers_invoices.get().subscribe((docList) => {
-              this.totalCoupons = 0;
-              this.totalOverHead = 0;
-              this.totalSalesValue = 0;
-              this.labelValue = 0;
-              this.valueTotal = 0;
+            query_customers_events.get().subscribe((docList) => {
               docList.forEach((doc) => {
-                let invoice_data = doc.data();
-                console.log(invoice_data["amount"]); //////////Edited here : was amount
-                this.InvoicesTotal = docList.size;
-                this.totalSalesValue =
-                  this.totalSalesValue + invoice_data["amount"]; //////////Edited here : was amount
-                this.totalCoupons = Math.floor(
-                  this.totalSalesValue / invoice_data["campId"]["alfa"]
-                );
-                this.labelValue =
-                  this.totalCoupons * invoice_data["campId"]["alfa"];
-                this.totalLabels = this.totalLabels + invoice_data["label"];
+                let event_data = doc.data();
+                this.eventsTotal = docList.size;
               });
-              this.totalOverHead = this.totalSalesValue - this.labelValue;
+              
             });
-            this.totalCoupons = 0;
-            this.totalOverHead = 0;
-            this.totalSalesValue = 0;
-            this.valueTotal = 0;
-            return this.invoiceService.getInvoicesByCustomer(this.customer.id);
+            return this.eventsService.getEventsByCustomer(this.customer.id);
           })
         )
         .subscribe((data) => {
-          this.invoices = data;
+          this.events = data;
         });
     });
   }
   getStatistic() {
-    let invoice: Invoice = {
+    let event: Event = {
       id: "",
       customerName:
         this.customer.firstName + " " + this.customer.lastName
           ? this.customer.firstName + " " + this.customer.lastName
           : "",
-      storeName: "",
-      ////////////Edited here removed value: null,
-
-      label: null,
-      serialNumber: null,
-      salesValue: null,
-      campValue: null,
+          
+      heartRate: null,
+      type: null,
       dateCreated: new Date(),
-      invoiceId: "",
+      eventId: "",
       createdBy: "",
       updatedBy: "",
       updatedAt: "",
-      campName: "",
+      deviceName: "",
       customerId: this.customer.id ? this.customer.id : "",
       customerUniqueId: this.customer.customerId
         ? this.customer.customerId
-        : "", //////////Edited here : added unique id
+        : "", 
     };
-
     this.dialog.open(EventFormComponent, {
       width: "800px",
-      data: invoice,
+      data: event,
     });
   }
-  openAddInvoice() {
+  openAddEvent() {
     this.dialog.open(EventFormComponent, { width: "800px", data: null });
   }
   editCustomer() {
@@ -181,19 +147,18 @@ export class CustomerProfileComponent implements OnInit {
       data: this.customer,
     });
   }
-  editInvoice(invoice: Invoice) {
-    this.dialog.open(EventFormComponent, { width: "800px", data: invoice });
-    // this.dialog.open(GiftCardComponent, { width: "800px", data: invoice });
+  editEvent(event: Event) {
+    this.dialog.open(EventFormComponent, { width: "800px", data: event });
   }
-  deleteInvoice(invoice: Invoice) {
-    this.invoiceService.deleteInvoice(invoice.id).subscribe(
+  deleteEvent(event: Event) {
+    this.eventsService.deleteEvent(event.id).subscribe(
       () => {
-        let invoiceList = this.invoiceService.invoices;
-        const invoiceIndex = invoiceList.findIndex(
-          (elt) => elt.id == invoice.id
+        let eventList = this.eventsService.events;
+        const eventIndex = eventList.findIndex(
+          (elt) => elt.id == event.id
         );
-        invoiceList = invoiceList.splice(invoiceIndex, 1);
-        this.invoiceService.setInvoicesData(invoiceList);
+        eventList = eventList.splice(eventIndex, 1);
+        this.eventsService.setEventsData(eventList);
       },
       (error) => {
         this._snackBar.open(error, "X", {
@@ -204,7 +169,7 @@ export class CustomerProfileComponent implements OnInit {
     );
   }
   exportCSV() {
-    this.invoices = this.invoices.map((elt) => {
+    this.events = this.events.map((elt) => {
       return {
         ...elt,
         full_name: this.customer.firstName + " " + this.customer.lastName,
@@ -213,12 +178,9 @@ export class CustomerProfileComponent implements OnInit {
         email: this.customer.email,
         gender: this.customer.gender,
         age: this.customer.age,
-        totalOverHead: this.totalOverHead,
-        totalSalesValue: this.totalSalesValue,
-        totalCoupons: this.totalCoupons,
-        TotalGiftCards: this.InvoicesTotal,
+        TotalEvents: this.eventsTotal,
       };
     });
-    this.excelService.exportExcel(this.invoices, "Patients");
+    this.excelService.exportExcel(this.events, "Patients");
   }
 }

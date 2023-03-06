@@ -38,7 +38,7 @@
             Export Admins
           </button> -->
       </div> 
-      <div class="invoice-list">
+      <div class="event-list">
         <app-table [canEdit]="canEdit"  [canDelete]="canDelete"  [canEnable]="canEnable" [dataSource]="userArray" [columns]="columns"
           (onEdit)="editUser($event)" (onEnableDisable)="enableDisableUser($event)"></app-table>
       </div>
