@@ -12,8 +12,8 @@ import { UsersService } from "src/app/services/users.service";
 import { AddDeviceFormComponent } from "../add-device-form/add-device-form";
 import { DisplayedColumns } from "src/app/shared/table/table.component";
 
-import { Camp } from "src/app/models/camp";
-import { CampsService } from "src/app/services/camp.service";
+import { Device } from "src/app/models/device";
+import { DevicesService } from "src/app/services/device.service";
 
 @Component({
   selector: "app-devices-list",
@@ -22,50 +22,50 @@ import { CampsService } from "src/app/services/camp.service";
 })
 export class DevicesListComponent implements OnInit {
   campsArray: any[] = [];
-  camps: Camp[] = [];
+  camps: Device[] = [];
   authUser: AuthUser;
-  columns: DisplayedColumns<Camp>[] = [
+  columns: DisplayedColumns<Device>[] = [
     {
       columnDef: "CampID",
       header: "Device ID",
-      cell: (element: Camp) => `${element.campId}`,
+      cell: (element: Device) => `${element.deviceId}`,
     },
     {
       columnDef: "name",
       header: "Name",
-      cell: (element: Camp) => `${element.name}`,
+      cell: (element: Device) => `${element.name}`,
     },
     {
       columnDef: "campStatus",
       header: "Active",
-      cell: (element: Camp) => `${element.campStatus}`,
+      cell: (element: Device) => `${element.deviceStatus}`,
     },
     {
       columnDef: "actions",
       header: "Actions",
-      cell: (element: Camp) => ``,
+      cell: (element: Device) => ``,
     },
   ];
   canEdit: boolean = true;
   canEnable: boolean = true;
-  localCampService: CampsService;
+  localCampService: DevicesService;
   url: string;
   constructor(
     public afs: AngularFirestore,
-    private readonly campService: CampsService,
+    private readonly campService: DevicesService,
     private readonly excelService: ExcelService,
     private readonly _snackBar: MatSnackBar,
     public dialog: MatDialog
   ) {}
   ngOnInit(): void {
-    this.campService.getCamps().subscribe((data) => {
-      this.campService.setCampsData(data);
-      this.camps = this.campService.camps$.getValue();
+    this.campService.getDevices().subscribe((data) => {
+      this.campService.setDevicesData(data);
+      this.camps = this.campService.devices$.getValue();
     });
   }
 
   exportCSV(): void {
-    this.excelService.exportExcel(this.campService.camps, "Devices");
+    this.excelService.exportExcel(this.campService.devices, "Devices");
   }
 
   openAddCampaign() {
@@ -75,7 +75,7 @@ export class DevicesListComponent implements OnInit {
     });
   }
 
-  editCampaign(camp: Camp) {
+  editCampaign(camp: Device) {
     this.dialog.open(AddDeviceFormComponent, { width: "800px", data: camp });
   }
 }

@@ -1,4 +1,3 @@
-import { Country } from "src/app/models/countries";
 import {
   FormBuilder,
   FormControl,
@@ -8,8 +7,8 @@ import {
 import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { Camp } from "src/app/models/camp";
-import { CampsService } from "src/app/services/camp.service";
+import { Device } from "src/app/models/device";
+import { DevicesService } from "src/app/services/device.service";
 
 @Component({
   selector: "app-device-form",
@@ -17,37 +16,34 @@ import { CampsService } from "src/app/services/camp.service";
   styleUrls: ["./add-device-form.component.scss"],
 })
 export class AddDeviceFormComponent implements OnInit {
-  campForm: FormGroup;
+  deviceForm: FormGroup;
   editMode: boolean;
-  countries: Country[];
   name = new FormControl(this.data?.name ? this.data?.name : "", [
     Validators.required,
   ]);
   alfa = new FormControl(this.data?.alfa ? this.data?.alfa : "", [
     Validators.required,
   ]);
-  campStatus = new FormControl(
-    this.data?.campStatus ? this.data?.campStatus : "",
+  deviceStatus = new FormControl(
+    this.data?.deviceStatus ? this.data?.deviceStatus : "",
     [Validators.required]
   );
-  campArray = ["Yes", "No"];
+  deviceArray = ["Yes", "No"];
   url: string;
-  countryCodesObject: any;
-  countryCodesArray: { country: string; value: string }[] = [];
   constructor(
     private readonly fb: FormBuilder,
-    private readonly campService: CampsService,
+    private readonly deviceService: DevicesService,
     private _snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AddDeviceFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Camp
+    @Inject(MAT_DIALOG_DATA) public data: Device
   ) {}
 
   ngOnInit(): void {
-    this.campService.getCampsAll().subscribe((data) => {
-      this.campService.setCampsData(data);
+    this.deviceService.getDevicesAll().subscribe((data) => {
+      this.deviceService.setDevicesData(data);
     });
 
-    this.campForm = this.fb.group({
+    this.deviceForm = this.fb.group({
       name: new FormControl(this.data?.name ? this.data?.name : "", [
         Validators.required,
         Validators.minLength(3),
@@ -56,25 +52,25 @@ export class AddDeviceFormComponent implements OnInit {
         Validators.required,
         Validators.minLength(3),
       ]),
-      campStatus: this.campStatus,
+      deviceStatus: this.deviceStatus,
     });
   }
 
-  submitCampData(): void {
-    if (this.campForm.valid) {
+  submitDeviceData(): void {
+    if (this.deviceForm.valid) {
       //on edit
       if (this.data) {
-        const camp = this.campForm.value as Camp;
-        camp.id = this.data.id;
-        this.campService.editCamp(camp).subscribe(
+        const device = this.deviceForm.value as Device;
+        device.id = this.data.id;
+        this.deviceService.editDevice(device).subscribe(
           (data) => {
             this.dialogRef.close();
-            let campList = this.campService.camps;
-            const customerIndex = campList.findIndex(
+            let deviceList = this.deviceService.devices;
+            const customerIndex = deviceList.findIndex(
               (elt) => elt.id == this.data.id
             );
-            campList[customerIndex] = camp;
-            this.campService.setCampsData(campList);
+            deviceList[customerIndex] = device;
+            this.deviceService.setDevicesData(deviceList);
             this._snackBar.open("Device Details edited successfully", "X", {
               horizontalPosition: "center",
               verticalPosition: "top",
@@ -89,19 +85,19 @@ export class AddDeviceFormComponent implements OnInit {
         );
       } else {
         //on add
-        const camp = this.campForm.value as Camp;
-        const totlaCamps = this.campService.camps.length;
-        const totalString = totlaCamps.toString();
-        camp.dateCreated = new Date();
+        const device = this.deviceForm.value as Device;
+        const totalDevices = this.deviceService.devices.length;
+        const totalString = totalDevices.toString();
+        device.dateCreated = new Date();
 
-        camp.campId = "A-" + Math.floor(new Date().getTime() + Math.random());
+        device.deviceId = "A-" + Math.floor(new Date().getTime() + Math.random());
 
-        this.campService.addCamp(camp).subscribe(
+        this.deviceService.addDevice(device).subscribe(
           (data) => {
             this.dialogRef.close();
-            let customerList = this.campService.camps$.getValue();
-            customerList.unshift(camp);
-            this.campService.setCampsData(customerList);
+            let customerList = this.deviceService.devices$.getValue();
+            customerList.unshift(device);
+            this.deviceService.setDevicesData(customerList);
             this._snackBar.open("Device Data added successfully", "X", {
               horizontalPosition: "center",
               verticalPosition: "top",

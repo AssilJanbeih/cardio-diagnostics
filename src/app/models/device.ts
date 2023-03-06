@@ -1,8 +1,8 @@
-export class Camp {
+export class Device {
   id: string;
-  campId: string;
+  deviceId: string;
   name: string;
-  campStatus: string;
+  deviceStatus: string;
   dateCreated?: any;
   alfa: number;
 }

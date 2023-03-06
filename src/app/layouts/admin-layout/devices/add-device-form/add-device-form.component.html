@@ -1,6 +1,6 @@
 <h2>{{ data ? "Edit Device" : "Add Device" }}</h2>
 
-<form [formGroup]="campForm" (ngSubmit)="submitCampData()">
+<form [formGroup]="deviceForm" (ngSubmit)="submitDeviceData()">
   <div class="form-group">
     <h4>Device Name:</h4>
     <div class="input-group input-group-alternative mb-3">
@@ -17,8 +17,8 @@
     <small
       class="p-error error-text"
       *ngIf="
-      campForm.controls.name.invalid &&
-      campForm.controls.name.touched
+      deviceForm.controls.name.invalid &&
+      deviceForm.controls.name.touched
       "
       >Device Name is required.</small
     >
@@ -27,11 +27,11 @@
     <h4>Active:</h4>
     <div class="input-group input-group-alternative">
       <mat-select
-        [formControl]="campStatus"
+        [formControl]="deviceStatus"
         placeholder="Status"
         [ngStyle]="{ height: '40px' }"
       >
-        <mat-option *ngFor="let elt of campArray" [value]="elt">{{
+        <mat-option *ngFor="let elt of deviceArray" [value]="elt">{{
           elt
         }}</mat-option>
       </mat-select>
@@ -39,8 +39,8 @@
     <small
       class="p-error error-text"
       *ngIf="
-        campForm.controls.campStatus.invalid &&
-        campForm.controls.campStatus.touched
+      deviceForm.controls.deviceStatus.invalid &&
+      deviceForm.controls.deviceStatus.touched
       "
       >Status is required.</small
     >
@@ -53,8 +53,8 @@
     <small
       class="p-error error-text"
       *ngIf="
-        campForm.controls.alfa.invalid &&
-        campForm.controls.alfa.touched
+      deviceForm.controls.alfa.invalid &&
+      deviceForm.controls.alfa.touched
       "
       >Serial Number is required.</small
     >
