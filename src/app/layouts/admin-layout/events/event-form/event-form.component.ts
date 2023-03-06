@@ -51,7 +51,7 @@ export class EventFormComponent implements OnInit {
     this.data?.heartRate ? this.data?.heartRate : ""
   );
   type = new FormControl(this.data?.type ? this.data?.type : "");
-  customerId: string;
+  customerId : string;
   customerUniqueId: string;
   constructor(
     private readonly fb: FormBuilder,
@@ -82,6 +82,14 @@ export class EventFormComponent implements OnInit {
     this.customerUniqueId = this.data?.customerUniqueId
       ? this.data.customerUniqueId
       : "";
+    this.eventForm = this.fb.group({
+      deviceId: this.deviceId,
+      customerName: new FormControl(
+        this.data?.customerName ? this.data?.customerName : ""
+      ),
+      heartRate: this.heartRate,
+      type: this.type,
+    });
     this.customer_array = [];
     this.customers_ids = [];
     this.authUser = this.authService.userValue;
