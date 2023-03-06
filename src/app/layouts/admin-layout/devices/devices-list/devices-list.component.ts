@@ -21,12 +21,12 @@ import { DevicesService } from "src/app/services/device.service";
   styleUrls: ["./devices-list.component.scss"],
 })
 export class DevicesListComponent implements OnInit {
-  campsArray: any[] = [];
-  camps: Device[] = [];
+  devicesArray: any[] = [];
+  devices: Device[] = [];
   authUser: AuthUser;
   columns: DisplayedColumns<Device>[] = [
     {
-      columnDef: "CampID",
+      columnDef: "DeviceID",
       header: "Device ID",
       cell: (element: Device) => `${element.deviceId}`,
     },
@@ -36,7 +36,7 @@ export class DevicesListComponent implements OnInit {
       cell: (element: Device) => `${element.name}`,
     },
     {
-      columnDef: "campStatus",
+      columnDef: "deviceStatus",
       header: "Active",
       cell: (element: Device) => `${element.deviceStatus}`,
     },
@@ -48,34 +48,34 @@ export class DevicesListComponent implements OnInit {
   ];
   canEdit: boolean = true;
   canEnable: boolean = true;
-  localCampService: DevicesService;
+  localDeviceService: DevicesService;
   url: string;
   constructor(
     public afs: AngularFirestore,
-    private readonly campService: DevicesService,
+    private readonly deviceService: DevicesService,
     private readonly excelService: ExcelService,
     private readonly _snackBar: MatSnackBar,
     public dialog: MatDialog
   ) {}
   ngOnInit(): void {
-    this.campService.getDevices().subscribe((data) => {
-      this.campService.setDevicesData(data);
-      this.camps = this.campService.devices$.getValue();
+    this.deviceService.getDevices().subscribe((data) => {
+      this.deviceService.setDevicesData(data);
+      this.devices = this.deviceService.devices$.getValue();
     });
   }
 
   exportCSV(): void {
-    this.excelService.exportExcel(this.campService.devices, "Devices");
+    this.excelService.exportExcel(this.deviceService.devices, "Devices");
   }
 
-  openAddCampaign() {
+  openAddDevice() {
     this.dialog.open(AddDeviceFormComponent, {
       width: "800px",
       data: null,
     });
   }
 
-  editCampaign(camp: Device) {
-    this.dialog.open(AddDeviceFormComponent, { width: "800px", data: camp });
+  editDevice(device: Device) {
+    this.dialog.open(AddDeviceFormComponent, { width: "800px", data: device });
   }
 }

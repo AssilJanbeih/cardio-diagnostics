@@ -6,7 +6,7 @@
     <div class="col-7">
       <button
         mat-raised-button
-        (click)="openAddCampaign()"
+        (click)="openAddDevice()"
         color=""
         class="ml-6 text-white"
         [ngStyle]="{
@@ -44,12 +44,12 @@
             Export Admins
           </button> -->
       </div>
-      <div class="camp-list">
+      <div class="device-list">
         <app-table
           [canEdit]="canEdit"
-          [dataSource]="camps"
+          [dataSource]="devices"
           [columns]="columns"
-          (onEdit)="editCampaign($event)"
+          (onEdit)="editDevice($event)"
         ></app-table>
       </div>
     </div>
